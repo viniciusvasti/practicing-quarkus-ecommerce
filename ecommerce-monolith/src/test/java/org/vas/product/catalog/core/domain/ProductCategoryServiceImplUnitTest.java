@@ -9,19 +9,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
 
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 @QuarkusTest
 public class ProductCategoryServiceImplUnitTest {
 
-    private static ProductCategoryService productCategoryService;
-    private static ProductCategoryRepository productCategoryRepository;
-
-    @BeforeAll
-    public static void setUp() {
-        productCategoryRepository = Mockito.mock(ProductCategoryRepository.class);
-        productCategoryService = new ProductCategoryServiceImpl(productCategoryRepository);
-    }
+    @Inject
+    private ProductCategoryService productCategoryService;
+    @InjectMock
+    private ProductCategoryRepository productCategoryRepository;
 
     @Test
     public void testFindById() {
