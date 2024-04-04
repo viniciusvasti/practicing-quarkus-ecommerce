@@ -1,6 +1,9 @@
 package org.vas.product.catalog.core.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.Set;
 
@@ -26,13 +29,16 @@ public class ProductCategoryServiceImplUnitTest {
         // Given
         String id = "1";
         ProductCategory productCategory = new ProductCategory("Electronics");
-        Mockito.when(productCategoryService.findById(id)).thenReturn(productCategory);
+        when(productCategoryService.findById(id))
+                .thenReturn(productCategory);
 
         // When
         ProductCategory result = productCategoryService.findById(id);
 
         // Then
         assertEquals(productCategory, result);
+        verify(productCategoryRepository, times(1))
+                .findProductCategoryById(id);
     }
 
     @Test
@@ -40,7 +46,8 @@ public class ProductCategoryServiceImplUnitTest {
         // Given
         ProductCategory productCategory1 = new ProductCategory("Electronics");
         ProductCategory productCategory2 = new ProductCategory("Books");
-        Mockito.when(productCategoryService.listAll()).thenReturn(Set.of(productCategory1, productCategory2));
+        when(productCategoryService.listAll())
+                .thenReturn(Set.of(productCategory1, productCategory2));
 
         // When
         Set<ProductCategory> result = productCategoryService.listAll();
@@ -62,6 +69,8 @@ public class ProductCategoryServiceImplUnitTest {
 
         // Then
         assertEquals(name, productCategory.getName());
+        verify(productCategoryRepository, times(1))
+                .saveProductCategory(new ProductCategory(name));
     }
 
     @Test
@@ -73,7 +82,8 @@ public class ProductCategoryServiceImplUnitTest {
         productCategoryService.update(productCategory);
 
         // Then
-        Mockito.verify(productCategoryRepository, Mockito.times(1)).updateProductCategory(productCategory);
+        verify(productCategoryRepository, times(1))
+                .updateProductCategory(productCategory);
     }
 
 }
