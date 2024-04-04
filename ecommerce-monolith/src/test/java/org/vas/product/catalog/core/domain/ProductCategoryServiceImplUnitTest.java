@@ -2,18 +2,17 @@ package org.vas.product.catalog.core.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
 
-import io.quarkus.test.Mock;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-public class ProductCategoryServiceImplTest {
+public class ProductCategoryServiceImplUnitTest {
 
     private static ProductCategoryService productCategoryService;
     private static ProductCategoryRepository productCategoryRepository;
@@ -43,15 +42,16 @@ public class ProductCategoryServiceImplTest {
         // Given
         ProductCategory productCategory1 = new ProductCategory("Electronics");
         ProductCategory productCategory2 = new ProductCategory("Books");
-        Mockito.when(productCategoryService.listAll()).thenReturn(List.of(productCategory1, productCategory2));
+        Mockito.when(productCategoryService.listAll()).thenReturn(Set.of(productCategory1, productCategory2));
 
         // When
-        List<ProductCategory> result = productCategoryService.listAll();
+        Set<ProductCategory> result = productCategoryService.listAll();
 
         // Then
         assertEquals(2, result.size());
-        assertEquals(productCategory1, result.get(0));
-        assertEquals(productCategory2, result.get(1));
+        var iterator = result.iterator();
+        assertEquals(productCategory1, iterator.next());
+        assertEquals(productCategory2, iterator.next());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class ProductCategoryServiceImplTest {
         productCategoryService.update(productCategory);
 
         // Then
-        Mockito.verify(productCategoryRepository, Mockito.times(1)).update(productCategory);
+        Mockito.verify(productCategoryRepository, Mockito.times(1)).updateProductCategory(productCategory);
     }
 
 }
