@@ -1,18 +1,19 @@
 package org.vas.product.catalog.core.domain;
 
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class ProductCategory {
-    private UUID id;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Entity;
+
+@Entity
+public class ProductCategory extends PanacheEntity {
     private String name;
 
-    public ProductCategory(String name) {
-        this.id = UUID.randomUUID();
-        this.name = name;
+    public ProductCategory() {
     }
 
-    public UUID getId() {
-        return id;
+    public ProductCategory(String name) {
+        this.name = name;
     }
 
     public String getName() {
@@ -23,6 +24,8 @@ public class ProductCategory {
         this.name = name;
     }
 
+    // TODO: get rid of this by using DTOs
+    @JsonIgnore
     public boolean isValid() {
         return name != null && !name.isBlank() && name.length() >= 3 && name.length() <= 255
                 && name.matches("^[a-zA-Z0-9 ]+$");
@@ -37,6 +40,6 @@ public class ProductCategory {
             return false;
         }
         ProductCategory that = (ProductCategory) obj;
-        return id.equals(that.id);
+        return name.equals(that.name);
     }
 }

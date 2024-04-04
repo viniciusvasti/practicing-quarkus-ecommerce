@@ -1,9 +1,12 @@
 package org.vas.product.catalog.core.domain;
 
-import java.util.List;
+import java.util.Set;
 
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     private final ProductCategoryRepository productCategoryRepository;
@@ -13,11 +16,11 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     public ProductCategory findById(String id) {
-        return productCategoryRepository.findById(id);
+        return productCategoryRepository.findProductCategoryById(id);
     }
 
-    public List<ProductCategory> listAll() {
-        return productCategoryRepository.findAll();
+    public Set<ProductCategory> listAll() {
+        return productCategoryRepository.findAllProductCategories();
     }
 
     public ProductCategory create(String name) {
@@ -25,7 +28,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         if (!productCategory.isValid()) {
             throw new IllegalArgumentException("Invalid product category");
         }
-        productCategoryRepository.save(productCategory);
+        productCategoryRepository.saveProductCategory(productCategory);
         return productCategory;
     }
 
@@ -33,6 +36,6 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         if (!productCategory.isValid()) {
             throw new IllegalArgumentException("Invalid product category");
         }
-        productCategoryRepository.update(productCategory);
+        productCategoryRepository.updateProductCategory(productCategory);
     }
 }
