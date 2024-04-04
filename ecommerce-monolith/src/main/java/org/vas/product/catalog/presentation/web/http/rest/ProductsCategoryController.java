@@ -1,5 +1,11 @@
 package org.vas.product.catalog.presentation.web.http.rest;
 
+import java.util.List;
+import java.util.Set;
+
+import org.vas.product.catalog.core.domain.ProductCategory;
+import org.vas.product.catalog.core.domain.ProductCategoryService;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -11,15 +17,16 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/products-catalog")
-public class ProductsCatalogController {
+public class ProductsCategoryController {
 
-    // @Inject
-    // GreetingService greetingService;
+    @Inject
+    private ProductCategoryService service;
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getProductsCatalog() {
-        return "products list";
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<ProductCategory> getProductsCatalog() {
+        // return service.listAll();
+        return Set.of(new ProductCategory("category 1"), new ProductCategory("category 2"));
     }
 
     @GET
