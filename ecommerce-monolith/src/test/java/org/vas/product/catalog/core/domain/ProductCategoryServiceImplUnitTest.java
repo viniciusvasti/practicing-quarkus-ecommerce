@@ -1,15 +1,15 @@
 package org.vas.product.catalog.core.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
 
 import io.quarkus.test.InjectMock;
@@ -27,13 +27,13 @@ public class ProductCategoryServiceImplUnitTest {
     @Test
     public void testFindById() {
         // Given
-        String id = "1";
-        ProductCategory productCategory = new ProductCategory("Electronics");
+        Long id = 1L;
+        var productCategory = Optional.of(new ProductCategory("Electronics"));
         when(productCategoryService.findById(id))
                 .thenReturn(productCategory);
 
         // When
-        ProductCategory result = productCategoryService.findById(id);
+        Optional<ProductCategory> result = productCategoryService.findById(id);
 
         // Then
         assertEquals(productCategory, result);
@@ -46,7 +46,7 @@ public class ProductCategoryServiceImplUnitTest {
         // Given
         ProductCategory productCategory1 = new ProductCategory("Electronics");
         ProductCategory productCategory2 = new ProductCategory("Books");
-        when(productCategoryService.listAll())
+        when(productCategoryRepository.findAllProductCategories())
                 .thenReturn(Set.of(productCategory1, productCategory2));
 
         // When
@@ -54,9 +54,10 @@ public class ProductCategoryServiceImplUnitTest {
 
         // Then
         assertEquals(2, result.size());
-        var iterator = result.iterator();
-        assertEquals(productCategory1, iterator.next());
-        assertEquals(productCategory2, iterator.next());
+        assertTrue(result.contains(productCategory1));
+        assertTrue(result.contains(productCategory2));
+        verify(productCategoryRepository, times(1))
+                .findAllProductCategories();
     }
 
     @Test

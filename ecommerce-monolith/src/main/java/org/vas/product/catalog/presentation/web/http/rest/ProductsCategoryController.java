@@ -1,13 +1,15 @@
 package org.vas.product.catalog.presentation.web.http.rest;
 
-import java.util.List;
 import java.util.Set;
 
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.vas.product.catalog.core.domain.ProductCategory;
 import org.vas.product.catalog.core.domain.ProductCategoryService;
+import org.vas.product.catalog.presentation.dtos.CreateProductCategoryDTO;
+import org.vas.product.catalog.presentation.dtos.UpdateProductCategoryDTO;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -25,34 +27,33 @@ public class ProductsCategoryController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Set<ProductCategory> getProductsCatalog() {
-        // return service.listAll();
-        return Set.of(new ProductCategory("category 1"), new ProductCategory("category 2"));
+        return service.listAll();
     }
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public String getProductById(@PathParam("id") Long id) {
-        return "product by id: " + id;
+    public RestResponse<ProductCategory> getProductById(@PathParam("id") Long id) {
+        return service
+            .findById(id)
+            .map(RestResponse::ok)
+            .orElse(RestResponse.notFound());
     }
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    public String createProduct() {
-        return "product created";
+    @Produces(MediaType.APPLICATION_JSON)
+    public RestResponse<ProductCategory> createProduct(CreateProductCategoryDTO productCategory) {
+        // TODO: handle invalid product category exception
+        var created = service.create(productCategory.name());
+        return RestResponse.status(Status.CREATED, created);
     }
 
     @PATCH
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{id}")
-    public String updateProduct(@PathParam("id") Long id) {
-        return "product updated: " + id;
-    }
-
-    @DELETE
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/{id}")
-    public String deleteProduct(@PathParam("id") Long id) {
-        return "product deleted: " + id;
+    public RestResponse<ProductCategory> updateProduct(@PathParam("id") Long id, UpdateProductCategoryDTO productCategory) {
+        // TODO: handle invalid product category exception
+        service.update(new ProductCategory(id, productCategory.name()));
+        return RestResponse.accepted();
     }
 }

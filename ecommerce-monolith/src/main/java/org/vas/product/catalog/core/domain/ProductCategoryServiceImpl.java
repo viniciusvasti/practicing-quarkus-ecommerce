@@ -1,21 +1,20 @@
 package org.vas.product.catalog.core.domain;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
-    private final ProductCategoryRepository productCategoryRepository;
+    @Inject
+    private ProductCategoryRepository productCategoryRepository;
 
-    public ProductCategoryServiceImpl(ProductCategoryRepository productCategoryRepository) {
-        this.productCategoryRepository = productCategoryRepository;
-    }
-
-    public ProductCategory findById(String id) {
+    public Optional<ProductCategory> findById(Long id) {
         return productCategoryRepository.findProductCategoryById(id);
     }
 
