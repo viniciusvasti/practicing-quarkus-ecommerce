@@ -35,23 +35,23 @@ public class ProductsCategoryControllerIntegrationTest {
         // 2\"},{\"id\":3,\"name\":\"category 3\"}]",
         // responseBody);
 
-        assertTrue(responseBody.contains("{\"id\":1001,\"name\":\"Books\"}"));
-        assertTrue(responseBody.contains("{\"id\":1002,\"name\":\"Electronics\"}"));
-        assertTrue(responseBody.contains("{\"id\":1003,\"name\":\"Clothing\"}"));
-        assertTrue(responseBody.contains("{\"id\":1004,\"name\":\"Home & Kitchen\"}"));
+        assertTrue(responseBody.contains("{\"id\":1,\"name\":\"Books\"}"));
+        assertTrue(responseBody.contains("{\"id\":51,\"name\":\"Electronics\"}"));
+        assertTrue(responseBody.contains("{\"id\":101,\"name\":\"Clothing\"}"));
+        assertTrue(responseBody.contains("{\"id\":151,\"name\":\"Home & Kitchen\"}"));
     }
 
     @Test
     void testGetProductById() {
         String responseBody = given()
-                .when().get("/1003")
+                .when().get("/101")
                 .then()
                 .statusCode(200)
                 .body("name", is("Clothing"))
-                .body("id", is(1003))
+                .body("id", is(101))
                 .extract().asString();
 
-        assertEquals("{\"id\":1003,\"name\":\"Clothing\"}", responseBody);
+        assertEquals("{\"id\":101,\"name\":\"Clothing\"}", responseBody);
     }
 
     @Test
@@ -73,21 +73,21 @@ public class ProductsCategoryControllerIntegrationTest {
                 .then()
                 .statusCode(201)
                 .body("name", is("New Category"))
-                .body("id", is(1));
+                .body("id", is(201));
     }
 
     @Test
     void testUpdateProduct() {
-        UpdateProductCategoryDTO updateProductCategoryDTO = new UpdateProductCategoryDTO(1l, "Updated Category");
+        UpdateProductCategoryDTO updateProductCategoryDTO = new UpdateProductCategoryDTO(201l, "Updated Category");
         given()
                 .header("Content-type", "application/json")
                 .body(updateProductCategoryDTO)
-                .when().patch("/1")
+                .when().patch("/201")
                 .then()
                 .statusCode(202)
                 .body(is(""));
 
-        var updatedProduct = productCategoryRepository.findProductCategoryById(1l).get();
+        var updatedProduct = productCategoryRepository.findProductCategoryById(201l).get();
         assertEquals("Updated Category", updatedProduct.getName());
     }
 }
