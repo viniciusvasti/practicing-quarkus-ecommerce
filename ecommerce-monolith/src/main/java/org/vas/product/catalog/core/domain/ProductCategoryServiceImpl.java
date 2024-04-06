@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
+import org.vas.product.catalog.core.ports.ProductCategoryService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

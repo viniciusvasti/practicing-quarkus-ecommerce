@@ -5,7 +5,7 @@ import java.util.Set;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.vas.product.catalog.core.domain.ProductCategory;
-import org.vas.product.catalog.core.domain.ProductCategoryService;
+import org.vas.product.catalog.core.ports.ProductCategoryService;
 import org.vas.product.catalog.presentation.dtos.CreateProductCategoryDTO;
 import org.vas.product.catalog.presentation.dtos.UpdateProductCategoryDTO;
 

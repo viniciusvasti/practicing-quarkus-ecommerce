@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
+import org.vas.product.catalog.core.ports.ProductCategoryService;
 
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
