@@ -14,8 +14,8 @@ import jakarta.enterprise.inject.Alternative;
 public class TestProductCategorySqlPanacheRepository extends ProductCategorySqlPanacheRepository {
     @PostConstruct
     void init() {
-        saveProductCategory(new ProductCategory("category 1"));
-        saveProductCategory(new ProductCategory("category 2"));
-        saveProductCategory(new ProductCategory("category 3"));
+        // saveProductCategory(new ProductCategory("category 1"));
+        // saveProductCategory(new ProductCategory("category 2"));
+        // saveProductCategory(new ProductCategory("category 3"));
     }
 }
