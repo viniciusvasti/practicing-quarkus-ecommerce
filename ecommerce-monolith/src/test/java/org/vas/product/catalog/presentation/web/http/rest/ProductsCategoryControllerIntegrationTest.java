@@ -4,6 +4,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.Test;
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
@@ -12,12 +14,12 @@ import org.vas.product.catalog.presentation.dtos.UpdateProductCategoryDTO;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
+import io.quarkus.test.junit.mockito.InjectSpy;
 
 @QuarkusTest
 @TestHTTPEndpoint(ProductsCategoryController.class)
 public class ProductsCategoryControllerIntegrationTest {
-    @Inject
+    @InjectSpy
     private ProductCategoryRepository productCategoryRepository;
 
     @Test
@@ -29,12 +31,16 @@ public class ProductsCategoryControllerIntegrationTest {
                 .body("size()", is(4))
                 .extract().asString();
 
-        assertEquals("[{\"id\":1,\"name\":\"Books\"},{\"id\":101,\"name\":\"Clothing\"},{\"id\":51,\"name\":\"Electronics\"},{\"id\":151,\"name\":\"Home & Kitchen\"}]", responseBody);
+        assertEquals(
+                "[{\"id\":1,\"name\":\"Books\"},{\"id\":101,\"name\":\"Clothing\"},{\"id\":51,\"name\":\"Electronics\"},{\"id\":151,\"name\":\"Home & Kitchen\"}]",
+                responseBody);
 
         assertTrue(responseBody.contains("{\"id\":1,\"name\":\"Books\"}"));
         assertTrue(responseBody.contains("{\"id\":51,\"name\":\"Electronics\"}"));
         assertTrue(responseBody.contains("{\"id\":101,\"name\":\"Clothing\"}"));
         assertTrue(responseBody.contains("{\"id\":151,\"name\":\"Home & Kitchen\"}"));
+
+        verify(productCategoryRepository, times(1)).findAllProductCategories();
     }
 
     @Test
@@ -48,6 +54,8 @@ public class ProductsCategoryControllerIntegrationTest {
                 .extract().asString();
 
         assertEquals("{\"id\":101,\"name\":\"Clothing\"}", responseBody);
+
+        verify(productCategoryRepository, times(1)).findProductCategoryById(101l);
     }
 
     @Test
@@ -57,6 +65,8 @@ public class ProductsCategoryControllerIntegrationTest {
                 .then()
                 .statusCode(404)
                 .body(is(""));
+
+        verify(productCategoryRepository, times(1)).findProductCategoryById(100l);
     }
 
     @Test
@@ -70,6 +80,11 @@ public class ProductsCategoryControllerIntegrationTest {
                 .statusCode(201)
                 .body("name", is("New Category"))
                 .body("id", is(201));
+
+        var newProduct = productCategoryRepository.findProductCategoryById(201l).get();
+        assertEquals("New Category", newProduct.getName());
+
+        verify(productCategoryRepository, times(1)).saveProductCategory(newProduct);
     }
 
     @Test
@@ -85,5 +100,7 @@ public class ProductsCategoryControllerIntegrationTest {
 
         var updatedProduct = productCategoryRepository.findProductCategoryById(201l).get();
         assertEquals("Updated Category", updatedProduct.getName());
+
+        verify(productCategoryRepository, times(1)).updateProductCategory(updatedProduct);
     }
 }
