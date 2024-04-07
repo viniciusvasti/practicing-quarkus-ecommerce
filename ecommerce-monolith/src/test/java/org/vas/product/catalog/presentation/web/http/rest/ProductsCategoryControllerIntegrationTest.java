@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -67,6 +68,16 @@ public class ProductsCategoryControllerIntegrationTest {
                 .body(is(""));
 
         verify(productCategoryRepository, times(1)).findProductCategoryById(100l);
+    }
+
+    @Test
+    void testGetProductByIdAsStringShouldReturnError() {
+        given()
+                .when().get("/aaaa")
+                .then()
+                .statusCode(404);
+
+        verify(productCategoryRepository, times(0)).findProductCategoryById(any());
     }
 
     @Test

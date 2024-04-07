@@ -34,10 +34,10 @@ public class ProductsCategoryController {
     }
 
     @GET
-    @Path("/{id}")
-    public RestResponse<ProductCategory> getProductById(@PathParam("id") Long id) {
+    @Path("/{id:\\d+}")
+    public RestResponse<ProductCategory> getProductById(@PathParam("id") String id) {
         return service
-            .findById(id)
+            .findById(Long.parseLong(id))
             .map(RestResponse::ok)
             .orElse(RestResponse.notFound());
     }
@@ -51,11 +51,11 @@ public class ProductsCategoryController {
     }
 
     @PATCH
-    @Path("/{id}")
+    @Path("/{id:\\d+}")
     @Transactional
-    public RestResponse<ProductCategory> updateProduct(@PathParam("id") Long id, UpdateProductCategoryDTO productCategory) {
+    public RestResponse<ProductCategory> updateProduct(@PathParam("id") String id, UpdateProductCategoryDTO productCategory) {
         // TODO: handle invalid product category exception
-        service.update(new ProductCategory(id, productCategory.name()));
+        service.update(new ProductCategory(Long.parseLong(id), productCategory.name()));
         return RestResponse.accepted();
     }
 }
