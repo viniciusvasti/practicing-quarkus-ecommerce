@@ -2,8 +2,10 @@ package org.vas.product.catalog.presentation.web.http.rest;
 
 import java.util.Set;
 
+import org.jboss.resteasy.reactive.ResponseStatus;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
+import org.jboss.resteasy.reactive.RestResponse.StatusCode;
 import org.vas.product.catalog.core.domain.ProductCategory;
 import org.vas.product.catalog.core.ports.ProductCategoryService;
 import org.vas.product.catalog.presentation.dtos.CreateProductCategoryDTO;
@@ -52,10 +54,10 @@ public class ProductsCategoryController {
 
     @PATCH
     @Path("/{id:\\d+}")
+    @ResponseStatus(StatusCode.ACCEPTED)
     @Transactional
-    public RestResponse<ProductCategory> updateProduct(@PathParam("id") String id, UpdateProductCategoryDTO productCategory) {
+    public void updateProduct(@PathParam("id") String id, UpdateProductCategoryDTO productCategory) {
         // TODO: handle invalid product category exception
         service.update(new ProductCategory(Long.parseLong(id), productCategory.name()));
-        return RestResponse.accepted();
     }
 }
