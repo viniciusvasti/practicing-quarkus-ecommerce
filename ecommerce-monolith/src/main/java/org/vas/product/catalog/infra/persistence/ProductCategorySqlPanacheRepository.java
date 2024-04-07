@@ -16,7 +16,7 @@ public class ProductCategorySqlPanacheRepository implements ProductCategoryRepos
 
     @Override
     public ProductCategory saveProductCategory(ProductCategory productCategory) {
-        productCategory.persistAndFlush();
+        productCategory.persist();
         return productCategory;
     }
 
