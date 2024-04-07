@@ -10,6 +10,8 @@ import org.vas.product.catalog.presentation.dtos.CreateProductCategoryDTO;
 import org.vas.product.catalog.presentation.dtos.UpdateProductCategoryDTO;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -19,19 +21,19 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/products-catalog")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ProductsCategoryController {
 
     @Inject
     private ProductCategoryService service;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Set<ProductCategory> getProductsCatalog() {
         return service.listAll();
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public RestResponse<ProductCategory> getProductById(@PathParam("id") Long id) {
         return service
@@ -41,7 +43,7 @@ public class ProductsCategoryController {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public RestResponse<ProductCategory> createProduct(CreateProductCategoryDTO productCategory) {
         // TODO: handle invalid product category exception
         var created = service.create(productCategory.name());
@@ -49,8 +51,8 @@ public class ProductsCategoryController {
     }
 
     @PATCH
-    @Produces(MediaType.TEXT_PLAIN)
     @Path("/{id}")
+    @Transactional
     public RestResponse<ProductCategory> updateProduct(@PathParam("id") Long id, UpdateProductCategoryDTO productCategory) {
         // TODO: handle invalid product category exception
         service.update(new ProductCategory(id, productCategory.name()));

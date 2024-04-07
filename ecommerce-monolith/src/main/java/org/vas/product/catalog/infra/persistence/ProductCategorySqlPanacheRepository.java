@@ -11,13 +11,11 @@ import org.vas.product.catalog.core.domain.ProductCategory;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.panache.common.Sort.Direction;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class ProductCategorySqlPanacheRepository implements ProductCategoryRepository {
 
     @Override
-    @Transactional
     public ProductCategory saveProductCategory(ProductCategory productCategory) {
         productCategory.persistAndFlush();
         return productCategory;
@@ -35,7 +33,6 @@ public class ProductCategorySqlPanacheRepository implements ProductCategoryRepos
     }
 
     @Override
-    @Transactional
     public void updateProductCategory(ProductCategory productCategory) {
         Optional<ProductCategory> existingProductCategory = ProductCategory.findByIdOptional(productCategory.id);
         existingProductCategory.ifPresent(pc -> {
