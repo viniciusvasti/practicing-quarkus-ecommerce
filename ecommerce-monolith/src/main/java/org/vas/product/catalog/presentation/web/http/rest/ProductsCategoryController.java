@@ -31,13 +31,13 @@ public class ProductsCategoryController {
     private ProductCategoryService service;
 
     @GET
-    public Set<ProductCategory> getProductsCatalog() {
+    public Set<ProductCategory> getAll() {
         return service.listAll();
     }
 
     @GET
     @Path("/{id:\\d+}")
-    public RestResponse<ProductCategory> getProductById(@PathParam("id") String id) {
+    public RestResponse<ProductCategory> getById(@PathParam("id") String id) {
         return service
             .findById(Long.parseLong(id))
             .map(RestResponse::ok)
@@ -46,7 +46,7 @@ public class ProductsCategoryController {
 
     @POST
     @Transactional
-    public RestResponse<ProductCategory> createProduct(CreateProductCategoryDTO productCategory) {
+    public RestResponse<ProductCategory> create(CreateProductCategoryDTO productCategory) {
         // TODO: handle invalid product category exception
         var created = service.create(productCategory.name());
         return RestResponse.status(Status.CREATED, created);
@@ -56,7 +56,7 @@ public class ProductsCategoryController {
     @Path("/{id:\\d+}")
     @ResponseStatus(StatusCode.ACCEPTED)
     @Transactional
-    public void updateProduct(@PathParam("id") String id, UpdateProductCategoryDTO productCategory) {
+    public void update(@PathParam("id") String id, UpdateProductCategoryDTO productCategory) {
         // TODO: handle invalid product category exception
         service.update(new ProductCategory(Long.parseLong(id), productCategory.name()));
     }
