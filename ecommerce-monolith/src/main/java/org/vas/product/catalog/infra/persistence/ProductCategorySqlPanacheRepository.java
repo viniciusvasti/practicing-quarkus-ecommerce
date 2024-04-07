@@ -1,15 +1,14 @@
 package org.vas.product.catalog.infra.persistence;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
 import org.vas.product.catalog.core.domain.ProductCategory;
 
 import io.quarkus.panache.common.Sort;
-import io.quarkus.panache.common.Sort.Direction;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
@@ -28,8 +27,9 @@ public class ProductCategorySqlPanacheRepository implements ProductCategoryRepos
 
     @Override
     public Set<ProductCategory> findAllProductCategories() {
-        List<ProductCategory> productCategories = ProductCategory.listAll(Sort.by("name", Direction.Ascending));
-        return productCategories.stream().collect(Collectors.toSet());
+        List<ProductCategory> productCategories = ProductCategory.listAll(Sort.by("name").ascending());
+        // LinkedHashSet to keep the order of list elements
+        return new LinkedHashSet<ProductCategory>(productCategories);
     }
 
     @Override

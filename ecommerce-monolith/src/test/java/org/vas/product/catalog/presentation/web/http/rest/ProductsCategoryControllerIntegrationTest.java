@@ -29,11 +29,7 @@ public class ProductsCategoryControllerIntegrationTest {
                 .body("size()", is(4))
                 .extract().asString();
 
-        // TODO: verify why it's not ordered
-        // assertEquals(
-        // "[{\"id\": 1,\"name\":\"category 1\"},{\"id\": 2,\"name\":\"category
-        // 2\"},{\"id\":3,\"name\":\"category 3\"}]",
-        // responseBody);
+        assertEquals("[{\"id\":1,\"name\":\"Books\"},{\"id\":101,\"name\":\"Clothing\"},{\"id\":51,\"name\":\"Electronics\"},{\"id\":151,\"name\":\"Home & Kitchen\"}]", responseBody);
 
         assertTrue(responseBody.contains("{\"id\":1,\"name\":\"Books\"}"));
         assertTrue(responseBody.contains("{\"id\":51,\"name\":\"Electronics\"}"));
