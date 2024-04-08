@@ -24,7 +24,7 @@ public class ProductsCategoryControllerIntegrationTest {
     private ProductCategoryRepository productCategoryRepository;
 
     @Test
-    void testGetProductsCatalog() {
+    void testGetProductCategories() {
         String responseBody = given()
                 .when().get("")
                 .then()
@@ -45,7 +45,7 @@ public class ProductsCategoryControllerIntegrationTest {
     }
 
     @Test
-    void testGetProductById() {
+    void testGetProductCategoryById() {
         String responseBody = given()
                 .when().get("/101")
                 .then()
@@ -60,7 +60,7 @@ public class ProductsCategoryControllerIntegrationTest {
     }
 
     @Test
-    void testGetProductByIdShouldReturnNotFound() {
+    void testGetProductCategoryByIdShouldReturnNotFound() {
         given()
                 .when().get("/100")
                 .then()
@@ -71,7 +71,7 @@ public class ProductsCategoryControllerIntegrationTest {
     }
 
     @Test
-    void testGetProductByIdAsStringShouldReturnError() {
+    void testGetProductCategoryByIdAsStringShouldReturnError() {
         given()
                 .when().get("/aaaa")
                 .then()
@@ -81,7 +81,7 @@ public class ProductsCategoryControllerIntegrationTest {
     }
 
     @Test
-    void testCreateProduct() {
+    void testCreateProductCategory() {
         CreateProductCategoryDTO createProductCategoryDTO = new CreateProductCategoryDTO("New Category");
         given()
                 .header("Content-type", "application/json")
@@ -99,7 +99,7 @@ public class ProductsCategoryControllerIntegrationTest {
     }
 
     @Test
-    void testUpdateProduct() {
+    void testUpdateProductCategory() {
         UpdateProductCategoryDTO updateProductCategoryDTO = new UpdateProductCategoryDTO(201l, "Updated Category");
         given()
                 .header("Content-type", "application/json")
