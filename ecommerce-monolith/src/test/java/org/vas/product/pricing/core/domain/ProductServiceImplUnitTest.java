@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.vas.product.catalog.core.domain.ProductCategory;
 import org.vas.product.pricing.core.adapters.ProductRepository;
 import org.vas.product.pricing.core.ports.ProductService;
 
