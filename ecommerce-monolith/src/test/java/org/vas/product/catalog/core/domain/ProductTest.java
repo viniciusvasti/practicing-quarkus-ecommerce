@@ -12,6 +12,7 @@ public class ProductTest {
     @Test
     void testValidProduct() {
         Product product = new Product("00000001", "Bose NC 700", "Noise Cancelling Headphones", category);
+        assertEquals("00000001", product.getSku());
         assertEquals("Bose NC 700", product.getName());
         assertEquals("Noise Cancelling Headphones", product.getDescription());
         assertEquals(category, product.getCategory());
