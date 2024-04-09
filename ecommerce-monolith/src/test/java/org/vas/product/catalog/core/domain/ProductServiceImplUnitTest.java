@@ -28,7 +28,7 @@ public class ProductServiceImplUnitTest {
 
     private final ProductCategory category = new ProductCategory("Electronics");
     private final Optional<Product> productBoseNC700 = Optional
-            .of(new Product("Bose NC 700", "Noise Cancelling Headphones", category));
+            .of(new Product("00000001", "Bose NC 700", "Noise Cancelling Headphones", category));
 
     @Test
     public void testFindById() {
@@ -50,7 +50,7 @@ public class ProductServiceImplUnitTest {
     public void testFindAll() {
         // Given
         Product product1 = productBoseNC700.get();
-        Product product2 = new Product("Sony WH-1000XM4", "Noise Cancelling Headphones", category);
+        Product product2 = new Product("00000002", "Sony WH-1000XM4", "Noise Cancelling Headphones", category);
         when(productRepository.findAllProducts())
                 .thenReturn(Set.of(product1, product2));
         when(productRepository.findAllProducts())
@@ -70,16 +70,19 @@ public class ProductServiceImplUnitTest {
     @Test
     public void testCreate() {
         // Given
+        String sku = "00000001";
         String name = "Sony WH-1000XM4";
         String description = "Noise Cancelling Headphones";
+        var product = new Product(1L, sku, name, description, new ProductCategory(category.getId(), ""));
         when(productRepository.saveProduct(any(Product.class)))
-                .thenReturn(new Product(1L, name, description, category));
+                .thenReturn(new Product(1L, "00000001", name, description, category));
 
         // When
-        Product product = productService.create(name, description, category.getId());
+        Product createdProduct = productService.create(product);
 
         // Then
-        assertEquals(name, product.getName());
+        assertEquals(sku, createdProduct.getSku());
+        assertEquals(name, createdProduct.getName());
         verify(productRepository, times(1)).saveProduct(any(Product.class));
     }
 
@@ -87,6 +90,8 @@ public class ProductServiceImplUnitTest {
     public void testUpdateProduct() {
         // Given
         Product product = productBoseNC700.get();
+        when(productRepository.findProductById(product.getId()))
+                .thenReturn(productBoseNC700);
 
         // When
         productService.update(product);

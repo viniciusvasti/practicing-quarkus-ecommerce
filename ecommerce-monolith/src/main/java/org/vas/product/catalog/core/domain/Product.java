@@ -8,6 +8,8 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Product extends PanacheEntity {
+    // TODO: set unique constraint
+    private String sku;
     private String name;
     private String description;
     @ManyToOne
@@ -16,17 +18,27 @@ public class Product extends PanacheEntity {
     public Product() {
     }
 
-    public Product(String name, String description, ProductCategory category) {
+    public Product(String sku, String name, String description, ProductCategory category) {
+        this.sku = sku;
         this.name = name;
         this.description = description;
         this.category = category;
     }
 
-    public Product(Long id, String name, String description, ProductCategory category) {
+    public Product(Long id, String sku, String name, String description, ProductCategory category) {
         this.id = id;
+        this.sku = sku;
         this.name = name;
         this.description = description;
         this.category = category;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getSku() {
+        return sku;
     }
 
     public String getName() {
@@ -39,6 +51,10 @@ public class Product extends PanacheEntity {
 
     public ProductCategory getCategory() {
         return category;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public void setName(String name) {
@@ -56,10 +72,11 @@ public class Product extends PanacheEntity {
     // TODO: get rid of this by using DTOs
     @JsonIgnore
     public boolean isValid() {
-        boolean nameIsValid = name != null && !name.isBlank() && name.length() >= 3 && name.length() <= 255;
-        boolean descriptionIsValid = description != null && !description.isBlank() && description.length() >= 3 && description.length() <= 1000;
+        boolean skuIsValid = sku != null && sku.length() == 8;
+        boolean nameIsValid = name != null && name.length() >= 3 && name.length() <= 255;
+        boolean descriptionIsValid = description != null && description.length() >= 3 && description.length() <= 1000;
         boolean categoryIsValid = category != null;
 
-        return nameIsValid && descriptionIsValid && categoryIsValid;
+        return skuIsValid && nameIsValid && descriptionIsValid && categoryIsValid;
     }
 }

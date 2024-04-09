@@ -23,9 +23,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllProducts();
     }
 
-    public Product create(String name, String description, Long categoryId) {
-        // TODO: improve this to not pass "" as category name
-        Product product = new Product(name, description, new ProductCategory(categoryId, ""));
+    public Product create(Product product) {
         if (!product.isValid()) {
             throw new IllegalArgumentException("Invalid product ");
         }
@@ -33,6 +31,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public void update(Product product) {
+        var existingProduct = productRepository.findProductById(product.id).orElseThrow(
+                () -> new IllegalArgumentException("Product with id " + product.id + " not found"));
+        product.setSku(existingProduct.getSku());
         if (!product.isValid()) {
             throw new IllegalArgumentException("Invalid product ");
         }

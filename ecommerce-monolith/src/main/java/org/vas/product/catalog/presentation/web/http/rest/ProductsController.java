@@ -47,9 +47,11 @@ public class ProductsController {
 
     @POST
     @Transactional
-    public RestResponse<Product> create(CreateProductDTO product) {
-        // TODO: handle invalid product category exception
-        var created = service.create(product.name(), product.description(), product.categoryId());
+    public RestResponse<Product> create(CreateProductDTO productDto) {
+        // TODO: handle invalid product exception
+        Product product = new Product(productDto.sku(), productDto.name(), productDto.description(),
+                new ProductCategory(productDto.categoryId(), ""));
+        var created = service.create(product);
         return RestResponse.status(Status.CREATED, created);
     }
 
@@ -58,8 +60,8 @@ public class ProductsController {
     @ResponseStatus(StatusCode.ACCEPTED)
     @Transactional
     public void update(@PathParam("id") String id, UpdateProductDTO product) {
-        // TODO: handle invalid product category exception
-        service.update(new Product(Long.parseLong(id), product.name(), product.description(),
+        // TODO: handle invalid product exception
+        service.update(new Product(Long.parseLong(id), "", product.name(), product.description(),
                 new ProductCategory(product.categoryId(), "")));
     }
 }
