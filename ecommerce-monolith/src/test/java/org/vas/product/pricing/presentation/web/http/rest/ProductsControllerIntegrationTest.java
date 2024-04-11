@@ -108,7 +108,7 @@ public class ProductsControllerIntegrationTest {
 
     @Test
     void testCreateProduct() {
-        CreateProductDTO createProductDTO = new CreateProductDTO("00000009", BigDecimal.valueOf(300.00));
+        CreateProductDTO createProductDTO = new CreateProductDTO("10000009", BigDecimal.valueOf(300.00));
 
         Product product = given()
                 .header("Content-type", "application/json")
@@ -117,12 +117,12 @@ public class ProductsControllerIntegrationTest {
                 .then()
                 .statusCode(201)
                 .body("id", is(CoreMatchers.any(Integer.class)))
-                .body("sku", is("00000009"))
+                .body("sku", is("10000009"))
                 .body("price", is(300.00f))
                 .extract().as(Product.class);
 
         var newProduct = productRepository.findProductById(product.id).get();
-        assertEquals("00000009", newProduct.getSku());
+        assertEquals("10000009", newProduct.getSku());
         assertEquals("300.00", newProduct.getPrice().toString());
 
         verify(productRepository, times(1)).saveProduct(any(Product.class));
@@ -144,7 +144,7 @@ public class ProductsControllerIntegrationTest {
                 .body(is(""));
 
         var updatedProduct = productRepository.findProductById(newProduct.getId()).get();
-        assertEquals("00000009", updatedProduct.getSku());
+        assertEquals("00000010", updatedProduct.getSku());
         assertEquals(BigDecimal.valueOf(350.00), updatedProduct.getPrice());
 
         verify(productRepository, times(1)).updateProduct(any(Product.class));
