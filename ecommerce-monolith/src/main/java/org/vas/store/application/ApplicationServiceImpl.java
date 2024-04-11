@@ -29,17 +29,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Set<ProductCategoryDTO> listProductsCatalog() {
-        Map<Long, BigDecimal> prices = productPricingService.listAll().stream()
-                .collect(HashMap::new, (map, p) -> map.put(p.getId(), p.getPrice()), HashMap::putAll);
+        Map<String, BigDecimal> prices = productPricingService.listAll().stream()
+                .collect(HashMap::new, (map, p) -> map.put(p.getSku(), p.getPrice()), HashMap::putAll);
 
-        Map<Long, Integer> stockUnits = productInventoryService.listAll().stream()
+        Map<String, Integer> stockUnits = productInventoryService.listAll().stream()
                 .filter(p -> p.getStockUnits() > 0)
-                .collect(HashMap::new, (map, p) -> map.put(p.getId(), p.getStockUnits()), HashMap::putAll);
+                .collect(HashMap::new, (map, p) -> map.put(p.getSku(), p.getStockUnits()), HashMap::putAll);
 
         Map<Long, Set<ProductDTO>> categoryProductsMap = productService.listAll().stream()
-                .filter(p -> stockUnits.containsKey(p.getId()) && stockUnits.get(p.getId()) > 0
-                        && prices.containsKey(p.getId()))
-                .map(p -> new ProductDTO(p.getId(), p.getSku(), p.getName(), prices.get(p.getId()), p.getDescription(),
+                .filter(p -> stockUnits.containsKey(p.getSku()) && stockUnits.get(p.getSku()) > 0
+                        && prices.containsKey(p.getSku()))
+                .map(p -> new ProductDTO(p.getId(), p.getSku(), p.getName(), prices.get(p.getSku()), p.getDescription(),
                         p.getCategory().getId()))
                 .collect(HashMap::new, (map, p) -> {
                     Set<ProductDTO> products = map.getOrDefault(p.categoryId(), new HashSet<>());
