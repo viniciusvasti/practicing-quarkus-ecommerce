@@ -23,6 +23,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Inject
     private org.vas.product.pricing.core.ports.ProductService productPricingService;
     @Inject
+    private org.vas.product.inventory.core.ports.ProductService productInventoryService;
+    @Inject
     private ProductService productService;
 
     @Override
@@ -30,8 +32,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         Map<Long, BigDecimal> prices = productPricingService.listAll().stream()
                 .collect(HashMap::new, (map, p) -> map.put(p.getId(), p.getPrice()), HashMap::putAll);
 
+        Map<Long, Integer> stockUnits = productInventoryService.listAll().stream()
+                .filter(p -> p.getStockUnits() > 0)
+                .collect(HashMap::new, (map, p) -> map.put(p.getId(), p.getStockUnits()), HashMap::putAll);
+
         Map<Long, Set<ProductDTO>> categoryProductsMap = productService.listAll().stream()
-                .map(p -> new ProductDTO(p.getId(), p.getSku(), p.getName(), prices.get(p.getId()), p.getDescription(), p.getCategory().getId()))
+                .filter(p -> stockUnits.containsKey(p.getId()) && stockUnits.get(p.getId()) > 0
+                        && prices.containsKey(p.getId()))
+                .map(p -> new ProductDTO(p.getId(), p.getSku(), p.getName(), prices.get(p.getId()), p.getDescription(),
+                        p.getCategory().getId()))
                 .collect(HashMap::new, (map, p) -> {
                     Set<ProductDTO> products = map.getOrDefault(p.categoryId(), new HashSet<>());
                     products.add(p);

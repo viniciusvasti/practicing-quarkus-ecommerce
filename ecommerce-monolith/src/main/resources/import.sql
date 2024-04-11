@@ -13,6 +13,9 @@ INSERT INTO product (id, sku, name, description, category_id) VALUES (nextval('p
 INSERT INTO product (id, sku, name, description, category_id) VALUES (nextval('product_seq'), '00000006', 'Nike Air Max 270', 'The Nike Air Max 270 is inspired by two icons of big Air: the Air Max 180 and Air Max 93', 101);
 INSERT INTO product (id, sku, name, description, category_id) VALUES (nextval('product_seq'), '00000007', 'Instant Pot Duo 7-in-1 Electric Pressure Cooker', 'The best-selling model', 151);
 INSERT INTO product (id, sku, name, description, category_id) VALUES (nextval('product_seq'), '00000008', 'Keurig K-Classic Coffee Maker', 'Brews multiple K-Cup Pod sizes', 151);
+INSERT INTO product (id, sku, name, description, category_id) VALUES (nextval('product_seq'), '00000009', 'Samsung Galaxy S21 Ultra', 'The ultimate smartphone', 51);
+INSERT INTO product (id, sku, name, description, category_id) VALUES (nextval('product_seq'), '00000010', 'Samsung Galaxy Watch 3', 'The most advanced smartwatch', 51);
+INSERT INTO product (id, sku, name, description, category_id) VALUES (nextval('product_seq'), '00000011', 'Samsung Galaxy Buds Pro', 'The ultimate earbuds', 51);
 
 -- Inserting products prices
 INSERT INTO product_price (id, sku, price) VALUES (nextval('product_price_seq'), '00000001', 29.99);
@@ -23,3 +26,15 @@ INSERT INTO product_price (id, sku, price) VALUES (nextval('product_price_seq'),
 INSERT INTO product_price (id, sku, price) VALUES (nextval('product_price_seq'), '00000006', 150.00);
 INSERT INTO product_price (id, sku, price) VALUES (nextval('product_price_seq'), '00000007', 79.95);
 INSERT INTO product_price (id, sku, price) VALUES (nextval('product_price_seq'), '00000008', 79.99);
+
+-- Inserting products inventory
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000001', 5);
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000002', 10);
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000003', 3);
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000004', 5);
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000005', 20);
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000006', 15);
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000007', 2);
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000008', 10);
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000009', 0);
+INSERT INTO product_inventory (id, sku, stockunits) VALUES (nextval('product_inventory_seq'), '00000011', 4);
