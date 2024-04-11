@@ -152,9 +152,12 @@ public class ProductsControllerIntegrationTest {
         verify(productRepository, times(0)).findProductById(any());
     }
 
-    @Test
+    @TestTransaction
     void testCreateProduct() {
-        CreateProductDTO createProductDTO = new CreateProductDTO("00000009", "New Product", "New Description", 101l);
+        ProductCategory category = new ProductCategory("TestCreate");
+        category.persist();
+        CreateProductDTO createProductDTO = new CreateProductDTO("00000009", "New Product", "New Description",
+                category.id);
         Product product = given()
                 .header("Content-type", "application/json")
                 .body(createProductDTO)
@@ -173,7 +176,7 @@ public class ProductsControllerIntegrationTest {
         assertEquals("00000009", newProduct.getSku());
         assertEquals("New Product", newProduct.getName());
         assertEquals("New Description", newProduct.getDescription());
-        assertEquals(101l, newProduct.getCategory().getId());
+        assertEquals(category.id, newProduct.getCategory().getId());
         assertEquals("Clothing", newProduct.getCategory().getName());
 
         verify(productRepository, times(1)).saveProduct(any(Product.class));
@@ -181,13 +184,14 @@ public class ProductsControllerIntegrationTest {
 
     @TestTransaction
     void testUpdateProduct() {
+        ProductCategory category = new ProductCategory("Test Update");
         Product newProduct = new Product("00000010", "Product to be updated", "Description",
-                new ProductCategory(101l, null));
+                new ProductCategory(category.id, null));
         newProduct = productRepository.saveProduct(newProduct);
         Product.flush();
 
         UpdateProductDTO updateProductDTO = new UpdateProductDTO(newProduct.getId(), "Updated Product",
-                "Updated Description", 101l);
+                "Updated Description", category.id);
         given()
                 .header("Content-type", "application/json")
                 .body(updateProductDTO)
