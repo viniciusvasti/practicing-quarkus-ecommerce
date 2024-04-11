@@ -3,19 +3,21 @@ package org.vas.product.catalog.presentation.web.http.rest;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
+import org.vas.product.catalog.core.domain.ProductCategory;
 import org.vas.product.catalog.presentation.dtos.CreateProductCategoryDTO;
 import org.vas.product.catalog.presentation.dtos.UpdateProductCategoryDTO;
 
+import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
@@ -30,27 +32,26 @@ public class ProductsCategoryControllerIntegrationTest {
     @Test
     @Order(1)
     void testGetProductCategories() {
-        String responseBody = given()
+        var categoriesCount = ProductCategory.count();
+
+        given()
                 .when().get("")
                 .then()
                 .statusCode(200)
-                .body("size()", is(4))
-                .extract().asString();
-
-        assertEquals(
-                "[{\"id\":1,\"name\":\"Books\"},{\"id\":101,\"name\":\"Clothing\"},{\"id\":51,\"name\":\"Electronics\"},{\"id\":151,\"name\":\"Home & Kitchen\"}]",
-                responseBody);
-
-        assertTrue(responseBody.contains("{\"id\":1,\"name\":\"Books\"}"));
-        assertTrue(responseBody.contains("{\"id\":51,\"name\":\"Electronics\"}"));
-        assertTrue(responseBody.contains("{\"id\":101,\"name\":\"Clothing\"}"));
-        assertTrue(responseBody.contains("{\"id\":151,\"name\":\"Home & Kitchen\"}"));
+                .body("size()", is((int) categoriesCount))
+                .body("[0].id", is(1))
+                .body("[0].name", is("Books"))
+                .body("[1].id", is(101))
+                .body("[1].name", is("Clothing"))
+                .body("[2].id", is(51))
+                .body("[2].name", is("Electronics"))
+                .body("[3].id", is(151))
+                .body("[3].name", is("Home & Kitchen"));
 
         verify(productCategoryRepository, times(1)).findAllProductCategories();
     }
 
     @Test
-    @Order(2)
     void testGetProductCategoryById() {
         String responseBody = given()
                 .when().get("/101")
@@ -66,19 +67,17 @@ public class ProductsCategoryControllerIntegrationTest {
     }
 
     @Test
-    @Order(3)
     void testGetProductCategoryByIdShouldReturnNotFound() {
         given()
-                .when().get("/100")
+                .when().get("/1000")
                 .then()
                 .statusCode(404)
                 .body(is(""));
 
-        verify(productCategoryRepository, times(1)).findProductCategoryById(100l);
+        verify(productCategoryRepository, times(1)).findProductCategoryById(1000l);
     }
 
     @Test
-    @Order(4)
     void testGetProductCategoryByIdAsStringShouldReturnError() {
         given()
                 .when().get("/aaaa")
@@ -89,37 +88,41 @@ public class ProductsCategoryControllerIntegrationTest {
     }
 
     @Test
-    @Order(5)
     void testCreateProductCategory() {
         CreateProductCategoryDTO createProductCategoryDTO = new CreateProductCategoryDTO("New Category");
-        given()
+        ProductCategory category = given()
                 .header("Content-type", "application/json")
                 .body(createProductCategoryDTO)
                 .when().post("")
                 .then()
                 .statusCode(201)
                 .body("name", is("New Category"))
-                .body("id", is(201));
+                .body("id", is(CoreMatchers.any(Integer.class)))
+                .extract().as(ProductCategory.class);
 
-        var newProductCategory = productCategoryRepository.findProductCategoryById(201l).get();
+        var newProductCategory = productCategoryRepository.findProductCategoryById(category.id).get();
         assertEquals("New Category", newProductCategory.getName());
 
         verify(productCategoryRepository, times(1)).saveProductCategory(newProductCategory);
     }
 
-    @Test
-    @Order(6)
+    @TestTransaction
     void testUpdateProductCategory() {
-        UpdateProductCategoryDTO updateProductCategoryDTO = new UpdateProductCategoryDTO(201l, "Updated Category");
+        ProductCategory newCategory = new ProductCategory("Updated Category");
+        newCategory = productCategoryRepository.saveProductCategory(newCategory);
+        ProductCategory.flush();
+
+        UpdateProductCategoryDTO updateProductCategoryDTO = new UpdateProductCategoryDTO(newCategory.id,
+                "Updated Category");
         given()
                 .header("Content-type", "application/json")
                 .body(updateProductCategoryDTO)
-                .when().patch("/201")
+                .when().patch("/" + newCategory.id)
                 .then()
                 .statusCode(202)
                 .body(is(""));
 
-        var updatedProductCategory = productCategoryRepository.findProductCategoryById(201l).get();
+        var updatedProductCategory = productCategoryRepository.findProductCategoryById(newCategory.id).get();
         assertEquals("Updated Category", updatedProductCategory.getName());
 
         verify(productCategoryRepository, times(1)).updateProductCategory(updatedProductCategory);

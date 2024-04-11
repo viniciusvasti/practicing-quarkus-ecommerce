@@ -3,11 +3,11 @@ package org.vas.product.catalog.presentation.web.http.rest;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -33,39 +33,85 @@ public class ProductsControllerIntegrationTest {
     @Test
     @Order(1)
     void testGetProducts() {
-        String responseBody = given()
+        var productsCount = Product.count();
+
+        given()
                 .when().get("")
                 .then()
                 .statusCode(200)
-                .body("size()", is(8))
-                .extract().asString();
-
-        assertEquals(
-                "[{\"id\":51,\"sku\":\"00000002\",\"name\":\"Clean Code\",\"description\":\"A Handbook of Agile Software Craftsmanship\",\"category\":{\"id\":1,\"name\":\"Books\"}},{\"id\":301,\"sku\":\"00000007\",\"name\":\"Instant Pot Duo 7-in-1 Electric Pressure Cooker\",\"description\":\"The best-selling model\",\"category\":{\"id\":151,\"name\":\"Home & Kitchen\"}},{\"id\":151,\"sku\":\"00000004\",\"name\":\"iPhone 12\",\"description\":\"Blast past fast\",\"category\":{\"id\":51,\"name\":\"Electronics\"}},{\"id\":351,\"sku\":\"00000008\",\"name\":\"Keurig K-Classic Coffee Maker\",\"description\":\"Brews multiple K-Cup Pod sizes\",\"category\":{\"id\":151,\"name\":\"Home & Kitchen\"}},{\"id\":201,\"sku\":\"00000005\",\"name\":\"Levi's 501 Original Fit Jeans\",\"description\":\"The original blue jean since 1873\",\"category\":{\"id\":101,\"name\":\"Clothing\"}},{\"id\":101,\"sku\":\"00000003\",\"name\":\"MacBook Pro\",\"description\":\"The ultimate pro notebook\",\"category\":{\"id\":51,\"name\":\"Electronics\"}},{\"id\":251,\"sku\":\"00000006\",\"name\":\"Nike Air Max 270\",\"description\":\"The Nike Air Max 270 is inspired by two icons of big Air: the Air Max 180 and Air Max 93\",\"category\":{\"id\":101,\"name\":\"Clothing\"}},{\"id\":1,\"sku\":\"00000001\",\"name\":\"The Pragmatic Programmer\",\"description\":\"Your journey to mastery\",\"category\":{\"id\":1,\"name\":\"Books\"}}]",
-                responseBody);
-
-        assertTrue(responseBody.contains(
-                "{\"id\":51,\"sku\":\"00000002\",\"name\":\"Clean Code\",\"description\":\"A Handbook of Agile Software Craftsmanship\",\"category\":{\"id\":1,\"name\":\"Books\"}}"));
-        assertTrue(responseBody.contains(
-                "{\"id\":301,\"sku\":\"00000007\",\"name\":\"Instant Pot Duo 7-in-1 Electric Pressure Cooker\",\"description\":\"The best-selling model\",\"category\":{\"id\":151,\"name\":\"Home & Kitchen\"}}"));
-        assertTrue(responseBody.contains(
-                "{\"id\":151,\"sku\":\"00000004\",\"name\":\"iPhone 12\",\"description\":\"Blast past fast\",\"category\":{\"id\":51,\"name\":\"Electronics\"}}"));
-        assertTrue(responseBody.contains(
-                "{\"id\":351,\"sku\":\"00000008\",\"name\":\"Keurig K-Classic Coffee Maker\",\"description\":\"Brews multiple K-Cup Pod sizes\",\"category\":{\"id\":151,\"name\":\"Home & Kitchen\"}}"));
-        assertTrue(responseBody.contains(
-                "{\"id\":201,\"sku\":\"00000005\",\"name\":\"Levi's 501 Original Fit Jeans\",\"description\":\"The original blue jean since 1873\",\"category\":{\"id\":101,\"name\":\"Clothing\"}}"));
-        assertTrue(responseBody.contains(
-                "{\"id\":101,\"sku\":\"00000003\",\"name\":\"MacBook Pro\",\"description\":\"The ultimate pro notebook\",\"category\":{\"id\":51,\"name\":\"Electronics\"}}"));
-        assertTrue(responseBody.contains(
-                "{\"id\":251,\"sku\":\"00000006\",\"name\":\"Nike Air Max 270\",\"description\":\"The Nike Air Max 270 is inspired by two icons of big Air: the Air Max 180 and Air Max 93\",\"category\":{\"id\":101,\"name\":\"Clothing\"}}"));
-        assertTrue(responseBody.contains(
-                "{\"id\":1,\"sku\":\"00000001\",\"name\":\"The Pragmatic Programmer\",\"description\":\"Your journey to mastery\",\"category\":{\"id\":1,\"name\":\"Books\"}}"));
+                .body("size()", is((int) productsCount))
+                .body("[0].id", CoreMatchers.any(Integer.class))
+                .body("[0].sku", is("00000002"))
+                .body("[0].name", is("Clean Code"))
+                .body("[0].description", is("A Handbook of Agile Software Craftsmanship"))
+                .body("[0].category.id", is(1))
+                .body("[0].category.name", is("Books"))
+                .body("[1].id", CoreMatchers.any(Integer.class))
+                .body("[1].sku", is("00000007"))
+                .body("[1].name", is("Instant Pot Duo 7-in-1 Electric Pressure Cooker"))
+                .body("[1].description", is("The best-selling model"))
+                .body("[1].category.id", is(151))
+                .body("[1].category.name", is("Home & Kitchen"))
+                .body("[2].id", CoreMatchers.any(Integer.class))
+                .body("[2].sku", is("00000004"))
+                .body("[2].name", is("iPhone 12"))
+                .body("[2].description", is("Blast past fast"))
+                .body("[2].category.id", is(51))
+                .body("[2].category.name", is("Electronics"))
+                .body("[3].id", CoreMatchers.any(Integer.class))
+                .body("[3].sku", is("00000008"))
+                .body("[3].name", is("Keurig K-Classic Coffee Maker"))
+                .body("[3].description", is("Brews multiple K-Cup Pod sizes"))
+                .body("[3].category.id", is(151))
+                .body("[3].category.name", is("Home & Kitchen"))
+                .body("[4].id", CoreMatchers.any(Integer.class))
+                .body("[4].sku", is("00000005"))
+                .body("[4].name", is("Levi's 501 Original Fit Jeans"))
+                .body("[4].description", is("The original blue jean since 1873"))
+                .body("[4].category.id", is(101))
+                .body("[4].category.name", is("Clothing"))
+                .body("[5].id", CoreMatchers.any(Integer.class))
+                .body("[5].sku", is("00000003"))
+                .body("[5].name", is("MacBook Pro"))
+                .body("[5].description", is("The ultimate pro notebook"))
+                .body("[5].category.id", is(51))
+                .body("[5].category.name", is("Electronics"))
+                .body("[6].id", CoreMatchers.any(Integer.class))
+                .body("[6].sku", is("00000006"))
+                .body("[6].name", is("Nike Air Max 270"))
+                .body("[6].description",
+                        is("The Nike Air Max 270 is inspired by two icons of big Air: the Air Max 180 and Air Max 93"))
+                .body("[6].category.id", is(101))
+                .body("[6].category.name", is("Clothing"))
+                .body("[7].id", CoreMatchers.any(Integer.class))
+                .body("[7].sku", is("00000011"))
+                .body("[7].name", is("Samsung Galaxy Buds Pro"))
+                .body("[7].description", is("The ultimate earbuds"))
+                .body("[7].category.id", is(51))
+                .body("[7].category.name", is("Electronics"))
+                .body("[8].id", CoreMatchers.any(Integer.class))
+                .body("[8].sku", is("00000009"))
+                .body("[8].name", is("Samsung Galaxy S21 Ultra"))
+                .body("[8].description", is("The ultimate smartphone"))
+                .body("[8].category.id", is(51))
+                .body("[8].category.name", is("Electronics"))
+                .body("[9].id", CoreMatchers.any(Integer.class))
+                .body("[9].sku", is("00000010"))
+                .body("[9].name", is("Samsung Galaxy Watch 3"))
+                .body("[9].description", is("The most advanced smartwatch"))
+                .body("[9].category.id", is(51))
+                .body("[9].category.name", is("Electronics"))
+                .body("[10].id", CoreMatchers.any(Integer.class))
+                .body("[10].sku", is("00000001"))
+                .body("[10].name", is("The Pragmatic Programmer"))
+                .body("[10].description", is("Your journey to mastery"))
+                .body("[10].category.id", is(1))
+                .body("[10].category.name", is("Books"));
 
         verify(productRepository, times(1)).findAllProducts();
     }
 
     @Test
-    @Order(2)
     void testGetProductById() {
         String responseBody = given()
                 .when().get("/351")
@@ -109,20 +155,21 @@ public class ProductsControllerIntegrationTest {
     @Test
     void testCreateProduct() {
         CreateProductDTO createProductDTO = new CreateProductDTO("00000009", "New Product", "New Description", 101l);
-        given()
+        Product product = given()
                 .header("Content-type", "application/json")
                 .body(createProductDTO)
                 .when().post("")
                 .then()
                 .statusCode(201)
-                .body("id", is(401))
+                .body("id", is(CoreMatchers.any(Integer.class)))
                 .body("sku", is("00000009"))
                 .body("name", is("New Product"))
                 .body("description", is("New Description"))
                 .body("category.id", is(101))
-                .body("category.name", is("Clothing"));
+                .body("category.name", is("Clothing"))
+                .extract().as(Product.class);
 
-        var newProduct = productRepository.findProductById(401l).get();
+        var newProduct = productRepository.findProductById(product.id).get();
         assertEquals("00000009", newProduct.getSku());
         assertEquals("New Product", newProduct.getName());
         assertEquals("New Description", newProduct.getDescription());
