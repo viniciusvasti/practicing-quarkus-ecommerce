@@ -1,5 +1,7 @@
 import dns from 'node:dns';
 import Shopping from './shopping';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 dns.setDefaultResultOrder('ipv4first');
 
 export type Product = {
@@ -41,7 +43,18 @@ export default async function Home() {
     })
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-5 p-24">
+    <main className="flex flex-col items-center gap-5">
+        <div className='flex gap-5'>
+            <Link href="/catalog">
+                <Button>Catalog</Button>
+            </Link>
+            <Link href="inventory">
+                <Button>Inventory</Button>
+            </Link>
+            <Link href="pricing">
+                <Button>Pricing</Button>
+            </Link>
+        </div>
       <Shopping products={products} />
     </main>
   );
