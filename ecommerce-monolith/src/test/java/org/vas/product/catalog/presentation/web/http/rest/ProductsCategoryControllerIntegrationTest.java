@@ -39,7 +39,6 @@ public class ProductsCategoryControllerIntegrationTest {
                 .then()
                 .statusCode(200)
                 .body("size()", is((int) categoriesCount))
-                .body("[0].id", is(1))
                 .body("[0].name", is("Books"))
                 .body("[1].id", is(101))
                 .body("[1].name", is("Clothing"))

@@ -27,7 +27,7 @@ public class ProductServiceImplUnitTest {
     @InjectMock
     private ProductRepository productRepository;
 
-    private final Optional<Product> productBoseNC700 = Optional.of(new Product("00000001", BigDecimal.valueOf(300.00)));
+    private final Optional<ProductPrice> productBoseNC700 = Optional.of(new ProductPrice("00000001", BigDecimal.valueOf(300.00)));
 
     @Test
     public void testFindById() {
@@ -37,7 +37,7 @@ public class ProductServiceImplUnitTest {
                 .thenReturn(productBoseNC700);
 
         // When
-        Optional<Product> result = productService.findById(id);
+        Optional<ProductPrice> result = productService.findById(id);
 
         // Then
         assertEquals(productBoseNC700, result);
@@ -48,15 +48,15 @@ public class ProductServiceImplUnitTest {
     @Test
     public void testFindAll() {
         // Given
-        Product product1 = productBoseNC700.get();
-        Product product2 = new Product("00000002", BigDecimal.valueOf(280.00));
+        ProductPrice product1 = productBoseNC700.get();
+        ProductPrice product2 = new ProductPrice("00000002", BigDecimal.valueOf(280.00));
         when(productRepository.findAllProducts())
                 .thenReturn(Set.of(product1, product2));
         when(productRepository.findAllProducts())
                 .thenReturn(Set.of(product1, product2));
 
         // When
-        Set<Product> result = productService.listAll();
+        Set<ProductPrice> result = productService.listAll();
 
         // Then
         assertEquals(2, result.size());
@@ -71,23 +71,23 @@ public class ProductServiceImplUnitTest {
         // Given
         String sku = "00000001";
         BigDecimal price = BigDecimal.valueOf(280.00);
-        var product = new Product(1L, sku, price);
-        when(productRepository.saveProduct(any(Product.class)))
-                .thenReturn(new Product(1L, "00000001", price));
+        var product = new ProductPrice(1L, sku, price);
+        when(productRepository.saveProduct(any(ProductPrice.class)))
+                .thenReturn(new ProductPrice(1L, "00000001", price));
 
         // When
-        Product createdProduct = productService.create(product);
+        ProductPrice createdProduct = productService.create(product);
 
         // Then
         assertEquals(sku, createdProduct.getSku());
         assertEquals(price, createdProduct.getPrice());
-        verify(productRepository, times(1)).saveProduct(any(Product.class));
+        verify(productRepository, times(1)).saveProduct(any(ProductPrice.class));
     }
 
     @Test
     public void testUpdateProduct() {
         // Given
-        Product product = productBoseNC700.get();
+        ProductPrice product = productBoseNC700.get();
         when(productRepository.findProductById(product.getId()))
                 .thenReturn(productBoseNC700);
 

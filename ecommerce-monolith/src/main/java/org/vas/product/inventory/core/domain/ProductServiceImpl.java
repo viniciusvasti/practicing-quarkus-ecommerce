@@ -15,22 +15,22 @@ public class ProductServiceImpl implements ProductService {
     @Inject
     private ProductRepository productRepository;
 
-    public Optional<Product> findById(Long id) {
+    public Optional<ProductInventory> findById(Long id) {
         return productRepository.findProductById(id);
     }
 
-    public Set<Product> listAll() {
+    public Set<ProductInventory> listAll() {
         return productRepository.findAllProducts();
     }
 
-    public Product create(Product product) {
+    public ProductInventory create(ProductInventory product) {
         if (!product.isValid()) {
             throw new IllegalArgumentException("Invalid product ");
         }
         return productRepository.saveProduct(product);
     }
 
-    public void update(Product product) {
+    public void update(ProductInventory product) {
         var existingProduct = productRepository.findProductById(product.id).orElseThrow(
                 () -> new IllegalArgumentException("Product with id " + product.id + " not found"));
         product.setSku(existingProduct.getSku());

@@ -11,22 +11,22 @@ import jakarta.persistence.Entity;
 
 @Schema(name = "ProductPrice", description = "A product's price by SKU")
 @Entity(name = "product_price")
-public class Product extends PanacheEntity {
+public class ProductPrice extends PanacheEntity {
     // TODO: set unique constraint
     @Schema(required = true, example = "12345678")
     private String sku;
     @Schema(required = true, example = "100.97")
     private BigDecimal price;
 
-    public Product() {
+    public ProductPrice() {
     }
 
-    public Product(String sku, BigDecimal price) {
+    public ProductPrice(String sku, BigDecimal price) {
         this.sku = sku;
         this.price = price;
     }
 
-    public Product(Long id, String sku, BigDecimal price) {
+    public ProductPrice(Long id, String sku, BigDecimal price) {
         this.id = id;
         this.sku = sku;
         this.price = price;

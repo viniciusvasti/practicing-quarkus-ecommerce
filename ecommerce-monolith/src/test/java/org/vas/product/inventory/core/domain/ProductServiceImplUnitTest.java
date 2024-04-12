@@ -26,7 +26,7 @@ public class ProductServiceImplUnitTest {
     @InjectMock
     private ProductRepository productRepository;
 
-    private final Optional<Product> productBoseNC700 = Optional.of(new Product("00000001", 300));
+    private final Optional<ProductInventory> productBoseNC700 = Optional.of(new ProductInventory("00000001", 300));
 
     @Test
     public void testFindById() {
@@ -36,7 +36,7 @@ public class ProductServiceImplUnitTest {
                 .thenReturn(productBoseNC700);
 
         // When
-        Optional<Product> result = productService.findById(id);
+        Optional<ProductInventory> result = productService.findById(id);
 
         // Then
         assertEquals(productBoseNC700, result);
@@ -47,15 +47,15 @@ public class ProductServiceImplUnitTest {
     @Test
     public void testFindAll() {
         // Given
-        Product product1 = productBoseNC700.get();
-        Product product2 = new Product("00000002", 280);
+        ProductInventory product1 = productBoseNC700.get();
+        ProductInventory product2 = new ProductInventory("00000002", 280);
         when(productRepository.findAllProducts())
                 .thenReturn(Set.of(product1, product2));
         when(productRepository.findAllProducts())
                 .thenReturn(Set.of(product1, product2));
 
         // When
-        Set<Product> result = productService.listAll();
+        Set<ProductInventory> result = productService.listAll();
 
         // Then
         assertEquals(2, result.size());
@@ -70,23 +70,23 @@ public class ProductServiceImplUnitTest {
         // Given
         String sku = "00000001";
         int stockUnits = 280;
-        var product = new Product(1L, sku, stockUnits);
-        when(productRepository.saveProduct(any(Product.class)))
-                .thenReturn(new Product(1L, "00000001", stockUnits));
+        var product = new ProductInventory(1L, sku, stockUnits);
+        when(productRepository.saveProduct(any(ProductInventory.class)))
+                .thenReturn(new ProductInventory(1L, "00000001", stockUnits));
 
         // When
-        Product createdProduct = productService.create(product);
+        ProductInventory createdProduct = productService.create(product);
 
         // Then
         assertEquals(sku, createdProduct.getSku());
         assertEquals(stockUnits, createdProduct.getStockUnits());
-        verify(productRepository, times(1)).saveProduct(any(Product.class));
+        verify(productRepository, times(1)).saveProduct(any(ProductInventory.class));
     }
 
     @Test
     public void testUpdateProduct() {
         // Given
-        Product product = productBoseNC700.get();
+        ProductInventory product = productBoseNC700.get();
         when(productRepository.findProductById(product.getId()))
                 .thenReturn(productBoseNC700);
 

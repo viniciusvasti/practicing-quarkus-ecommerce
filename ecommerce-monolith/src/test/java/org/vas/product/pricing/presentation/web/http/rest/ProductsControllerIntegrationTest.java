@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.vas.product.pricing.core.adapters.ProductRepository;
-import org.vas.product.pricing.core.domain.Product;
+import org.vas.product.pricing.core.domain.ProductPrice;
 import org.vas.product.pricing.presentation.dtos.CreateProductDTO;
 import org.vas.product.pricing.presentation.dtos.UpdateProductDTO;
 
@@ -34,7 +34,7 @@ public class ProductsControllerIntegrationTest {
     @Test
     @Order(1)
     void testGetProducts() {
-        var productsCount = Product.count();
+        var productsCount = ProductPrice.count();
 
         given()
                 .when().get("")
@@ -110,7 +110,7 @@ public class ProductsControllerIntegrationTest {
     void testCreateProduct() {
         CreateProductDTO createProductDTO = new CreateProductDTO("10000009", BigDecimal.valueOf(300.00));
 
-        Product product = given()
+        ProductPrice product = given()
                 .header("Content-type", "application/json")
                 .body(createProductDTO)
                 .when().post("")
@@ -119,20 +119,20 @@ public class ProductsControllerIntegrationTest {
                 .body("id", is(CoreMatchers.any(Integer.class)))
                 .body("sku", is("10000009"))
                 .body("price", is(300.00f))
-                .extract().as(Product.class);
+                .extract().as(ProductPrice.class);
 
         var newProduct = productRepository.findProductById(product.id).get();
         assertEquals("10000009", newProduct.getSku());
         assertEquals("300.00", newProduct.getPrice().toString());
 
-        verify(productRepository, times(1)).saveProduct(any(Product.class));
+        verify(productRepository, times(1)).saveProduct(any(ProductPrice.class));
     }
 
     @TestTransaction
     void testUpdateProduct() {
-        Product newProduct = new Product("00000010", BigDecimal.valueOf(300.00));
+        ProductPrice newProduct = new ProductPrice("00000010", BigDecimal.valueOf(300.00));
         newProduct = productRepository.saveProduct(newProduct);
-        Product.flush();
+        ProductPrice.flush();
 
         UpdateProductDTO updateProductDTO = new UpdateProductDTO(newProduct.getId(), BigDecimal.valueOf(350.00));
         given()
@@ -147,6 +147,6 @@ public class ProductsControllerIntegrationTest {
         assertEquals("00000010", updatedProduct.getSku());
         assertEquals(BigDecimal.valueOf(350.00), updatedProduct.getPrice());
 
-        verify(productRepository, times(1)).updateProduct(any(Product.class));
+        verify(productRepository, times(1)).updateProduct(any(ProductPrice.class));
     }
 }

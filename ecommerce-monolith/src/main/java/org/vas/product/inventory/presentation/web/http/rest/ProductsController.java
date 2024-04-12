@@ -10,7 +10,7 @@ import org.jboss.resteasy.reactive.ResponseStatus;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.jboss.resteasy.reactive.RestResponse.StatusCode;
-import org.vas.product.inventory.core.domain.Product;
+import org.vas.product.inventory.core.domain.ProductInventory;
 import org.vas.product.inventory.core.ports.ProductService;
 import org.vas.product.inventory.presentation.dtos.CreateProductDTO;
 import org.vas.product.inventory.presentation.dtos.UpdateProductDTO;
@@ -38,7 +38,7 @@ public class ProductsController {
     @GET
     @Operation(summary = "List all products inventory")
     @APIResponse(responseCode = "200", description = "List of all products")
-    public Set<Product> getAll() {
+    public Set<ProductInventory> getAll() {
         return service.listAll();
     }
 
@@ -49,7 +49,7 @@ public class ProductsController {
             @APIResponse(responseCode = "200", description = "Product details"),
             @APIResponse(responseCode = "404", description = "Product not found")
     })
-    public RestResponse<Product> getById(@PathParam("id") String id) {
+    public RestResponse<ProductInventory> getById(@PathParam("id") String id) {
         return service
                 .findById(Long.parseLong(id))
                 .map(RestResponse::ok)
@@ -63,9 +63,9 @@ public class ProductsController {
             @APIResponse(responseCode = "201", description = "Product created"),
             @APIResponse(responseCode = "400", description = "Invalid product")
     })
-    public RestResponse<Product> create(CreateProductDTO productDto) {
+    public RestResponse<ProductInventory> create(CreateProductDTO productDto) {
         // TODO: handle invalid product exception
-        Product product = new Product(productDto.sku(), productDto.stockUnits());
+        ProductInventory product = new ProductInventory(productDto.sku(), productDto.stockUnits());
         var created = service.create(product);
         return RestResponse.status(Status.CREATED, created);
     }
@@ -82,6 +82,6 @@ public class ProductsController {
     })
     public void update(@PathParam("id") String id, UpdateProductDTO product) {
         // TODO: handle invalid product exception
-        service.update(new Product(Long.parseLong(id), "", product.stockUnits()));
+        service.update(new ProductInventory(Long.parseLong(id), "", product.stockUnits()));
     }
 }

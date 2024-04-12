@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.vas.product.inventory.core.adapters.ProductRepository;
-import org.vas.product.inventory.core.domain.Product;
+import org.vas.product.inventory.core.domain.ProductInventory;
 
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,26 +15,26 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class ProductSqlPanacheRepository implements ProductRepository {
 
     @Override
-    public Product saveProduct(Product product) {
+    public ProductInventory saveProduct(ProductInventory product) {
         product.persist();
         return product;
     }
 
     @Override
-    public Optional<Product> findProductById(Long id) {
-        return Product.findByIdOptional(id);
+    public Optional<ProductInventory> findProductById(Long id) {
+        return ProductInventory.findByIdOptional(id);
     }
 
     @Override
-    public Set<Product> findAllProducts() {
-        List<Product> products = Product.listAll(Sort.by("sku").ascending());
+    public Set<ProductInventory> findAllProducts() {
+        List<ProductInventory> products = ProductInventory.listAll(Sort.by("sku").ascending());
         // LinkedHashSet to keep the order of list elements
-        return new LinkedHashSet<Product>(products);
+        return new LinkedHashSet<ProductInventory>(products);
     }
 
     @Override
-    public void updateProduct(Product product) {
-        Optional<Product> existingProduct = Product.findByIdOptional(product.id);
+    public void updateProduct(ProductInventory product) {
+        Optional<ProductInventory> existingProduct = ProductInventory.findByIdOptional(product.id);
         existingProduct.ifPresent(pc -> {
             pc.setStockUnits(product.getStockUnits());
             pc.persist();

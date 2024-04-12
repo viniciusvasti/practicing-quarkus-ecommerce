@@ -9,22 +9,22 @@ import jakarta.persistence.Entity;
 
 @Schema(name = "ProductInventory", description = "A product in the inventory holding the stock units")
 @Entity(name = "product_inventory")
-public class Product extends PanacheEntity {
+public class ProductInventory extends PanacheEntity {
     // TODO: set unique constraint
     @Schema(required = true, example = "12345678")
     private String sku;
     @Schema(required = true, example = "100")
     private int stockUnits;
 
-    public Product() {
+    public ProductInventory() {
     }
 
-    public Product(String sku, int stockUnits) {
+    public ProductInventory(String sku, int stockUnits) {
         this.sku = sku;
         this.stockUnits = stockUnits;
     }
 
-    public Product(Long id, String sku, int stockUnits) {
+    public ProductInventory(Long id, String sku, int stockUnits) {
         this.id = id;
         this.sku = sku;
         this.stockUnits = stockUnits;

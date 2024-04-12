@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.vas.product.pricing.core.adapters.ProductRepository;
-import org.vas.product.pricing.core.domain.Product;
+import org.vas.product.pricing.core.domain.ProductPrice;
 
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,26 +15,26 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class ProductSqlPanacheRepository implements ProductRepository {
 
     @Override
-    public Product saveProduct(Product product) {
+    public ProductPrice saveProduct(ProductPrice product) {
         product.persist();
         return product;
     }
 
     @Override
-    public Optional<Product> findProductById(Long id) {
-        return Product.findByIdOptional(id);
+    public Optional<ProductPrice> findProductById(Long id) {
+        return ProductPrice.findByIdOptional(id);
     }
 
     @Override
-    public Set<Product> findAllProducts() {
-        List<Product> products = Product.listAll(Sort.by("sku").ascending());
+    public Set<ProductPrice> findAllProducts() {
+        List<ProductPrice> products = ProductPrice.listAll(Sort.by("sku").ascending());
         // LinkedHashSet to keep the order of list elements
-        return new LinkedHashSet<Product>(products);
+        return new LinkedHashSet<ProductPrice>(products);
     }
 
     @Override
-    public void updateProduct(Product product) {
-        Optional<Product> existingProduct = Product.findByIdOptional(product.id);
+    public void updateProduct(ProductPrice product) {
+        Optional<ProductPrice> existingProduct = ProductPrice.findByIdOptional(product.id);
         existingProduct.ifPresent(pc -> {
             pc.setPrice(product.getPrice());
             pc.persist();

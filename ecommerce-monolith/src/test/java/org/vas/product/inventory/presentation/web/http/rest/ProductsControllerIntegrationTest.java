@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.vas.product.inventory.core.adapters.ProductRepository;
-import org.vas.product.inventory.core.domain.Product;
+import org.vas.product.inventory.core.domain.ProductInventory;
 import org.vas.product.inventory.presentation.dtos.CreateProductDTO;
 import org.vas.product.inventory.presentation.dtos.UpdateProductDTO;
 
@@ -32,7 +32,7 @@ public class ProductsControllerIntegrationTest {
     @Test
     @Order(1)
     void testGetProducts() {
-        var productsCount = Product.count();
+        var productsCount = ProductInventory.count();
 
         given()
                 .when().get("")
@@ -114,7 +114,7 @@ public class ProductsControllerIntegrationTest {
     @Test
     void testCreateProduct() {
         CreateProductDTO createProductDTO = new CreateProductDTO("00000009", 8);
-        Product product = given()
+        ProductInventory product = given()
                 .header("Content-type", "application/json")
                 .body(createProductDTO)
                 .when().post("")
@@ -123,20 +123,20 @@ public class ProductsControllerIntegrationTest {
                 .body("id", is(CoreMatchers.any(Integer.class)))
                 .body("sku", is("00000009"))
                 .body("stockUnits", is(8))
-                .extract().as(Product.class);
+                .extract().as(ProductInventory.class);
 
         var newProduct = productRepository.findProductById(product.id).get();
         assertEquals("00000009", newProduct.getSku());
         assertEquals(8, newProduct.getStockUnits());
 
-        verify(productRepository, times(1)).saveProduct(any(Product.class));
+        verify(productRepository, times(1)).saveProduct(any(ProductInventory.class));
     }
 
     @TestTransaction
     void testUpdateProduct() {
-        Product newProduct = new Product("00000010", 300);
+        ProductInventory newProduct = new ProductInventory("00000010", 300);
         newProduct = productRepository.saveProduct(newProduct);
-        Product.flush();
+        ProductInventory.flush();
 
         UpdateProductDTO updateProductDTO = new UpdateProductDTO(newProduct.getId(),
                 350);
@@ -152,6 +152,6 @@ public class ProductsControllerIntegrationTest {
         assertEquals("00000009", updatedProduct.getSku());
         assertEquals(350, updatedProduct.getStockUnits());
 
-        verify(productRepository, times(1)).updateProduct(any(Product.class));
+        verify(productRepository, times(1)).updateProduct(any(ProductInventory.class));
     }
 }
