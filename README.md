@@ -3,14 +3,16 @@
 - [x] SOLID
 - [x] Clean Code
 - [x] Clean Architecture
+- [ ] DTO design pattern (Data Transfer Object)
 
 - [x] Monolith
 - [x] REST API (JAX-RS)
+- [x] API Specification (OpenAPI + Swagger)
 - [x] SQL Database (Postgres)
 - [ ] NoSQL
 - [x] Database Migrations (Flyway)
 - [ ] GraphQL API
-- [ ] Health Check
+- [x] Health Check (SmallRye / MicroProfile)
 - [ ] Caching
 - [ ] Microservices
 - [ ] API Gateway

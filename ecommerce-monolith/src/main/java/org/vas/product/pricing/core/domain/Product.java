@@ -2,15 +2,20 @@ package org.vas.product.pricing.core.domain;
 
 import java.math.BigDecimal;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 
+@Schema(name = "ProductPrice", description = "A product's price by SKU")
 @Entity(name = "product_price")
 public class Product extends PanacheEntity {
     // TODO: set unique constraint
+    @Schema(required = true, example = "12345678")
     private String sku;
+    @Schema(required = true, example = "100.97")
     private BigDecimal price;
 
     public Product() {

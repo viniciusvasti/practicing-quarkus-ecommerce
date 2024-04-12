@@ -1,4 +1,8 @@
 package org.vas.product.inventory.presentation.dtos;
 
-public record UpdateProductDTO(Long id, int stockUnits) {
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+@Schema(name = "UpdateProductInventory", description = "A product in the inventory holding the stock units")
+public record UpdateProductDTO(@Schema(required = true) Long id,
+        @Schema(required = true, example = "10", description = "The number of units in stock") int stockUnits) {
 }

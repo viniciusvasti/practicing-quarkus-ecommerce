@@ -1,5 +1,7 @@
 package org.vas.product.catalog.core.domain;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -8,8 +10,10 @@ import jakarta.persistence.Entity;
 /**
  * The entity makes use of Panache, a layer on top of Hibernate ORM
  */
+@Schema(name = "ProductCategory", description = "A category of products in the store catalog")
 @Entity
 public class ProductCategory extends PanacheEntity {
+    @Schema(required = true, example = "Category Name")
     private String name;
 
     public ProductCategory() {

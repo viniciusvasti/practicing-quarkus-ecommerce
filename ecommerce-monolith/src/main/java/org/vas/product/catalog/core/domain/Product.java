@@ -1,16 +1,22 @@
 package org.vas.product.catalog.core.domain;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
+@Schema(name = "Product", description = "A product in the store catalog")
 @Entity
 public class Product extends PanacheEntity {
     // TODO: set unique constraint
+    @Schema(required = true, example = "12345678")
     private String sku;
+    @Schema(required = true, example = "Product Name")
     private String name;
+    @Schema(required = true, example = "Product Description")
     private String description;
     @ManyToOne
     private ProductCategory category;

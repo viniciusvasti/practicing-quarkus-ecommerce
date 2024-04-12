@@ -2,5 +2,9 @@ package org.vas.product.pricing.presentation.dtos;
 
 import java.math.BigDecimal;
 
-public record UpdateProductDTO(Long id, BigDecimal price) {
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+@Schema(name = "UpdateProductPrice", description = "A product's price by SKU")
+public record UpdateProductDTO(@Schema(required = true, example = "12345678") Long id,
+        @Schema(required = true, example = "100.97") BigDecimal price) {
 }

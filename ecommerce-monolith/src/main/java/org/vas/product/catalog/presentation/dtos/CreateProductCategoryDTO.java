@@ -1,4 +1,8 @@
 package org.vas.product.catalog.presentation.dtos;
 
-public record CreateProductCategoryDTO(String name) {
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+@Schema(name = "CreateProductCategory", description = "A product category in the catalog")
+public record CreateProductCategoryDTO(
+        @Schema(required = true, example = "Category Name") String name) {
 }
