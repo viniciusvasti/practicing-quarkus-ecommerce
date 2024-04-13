@@ -21,9 +21,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Inject
     private ProductCategoryService productCategoryService;
     @Inject
-    private org.vas.product.pricing.core.ports.ProductService productPricingService;
+    private org.vas.product.pricing.core.ports.ProductPriceService productPricingService;
     @Inject
-    private org.vas.product.inventory.core.ports.ProductService productInventoryService;
+    private org.vas.product.inventory.core.ports.ProductInventoryService productInventoryService;
     @Inject
     private ProductService productService;
 

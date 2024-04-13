@@ -1,3 +1,4 @@
+-- TODO: change increment by 50 to 1
 CREATE sequence product_inventory_SEQ START WITH 1 increment by 50;
 
 CREATE sequence product_price_SEQ START WITH 1 increment by 50;

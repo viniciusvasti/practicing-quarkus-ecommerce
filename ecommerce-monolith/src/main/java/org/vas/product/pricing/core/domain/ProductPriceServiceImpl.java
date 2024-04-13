@@ -1,16 +1,17 @@
 package org.vas.product.pricing.core.domain;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.vas.product.pricing.core.adapters.ProductRepository;
-import org.vas.product.pricing.core.ports.ProductService;
+import org.vas.product.pricing.core.ports.ProductPriceService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class ProductServiceImpl implements ProductService {
+public class ProductPriceServiceImpl implements ProductPriceService {
 
     @Inject
     private ProductRepository productRepository;
@@ -38,5 +39,10 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalArgumentException("Invalid product ");
         }
         productRepository.updateProduct(product);
+    }
+
+    @Override
+    public List<ProductPrice> findBySkus(List<String> skus) {
+        return productRepository.findBySkus(skus);
     }
 }

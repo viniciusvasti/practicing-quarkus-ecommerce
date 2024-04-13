@@ -11,7 +11,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.jboss.resteasy.reactive.RestResponse.StatusCode;
 import org.vas.product.pricing.core.domain.ProductPrice;
-import org.vas.product.pricing.core.ports.ProductService;
+import org.vas.product.pricing.core.ports.ProductPriceService;
 import org.vas.product.pricing.presentation.dtos.CreateProductDTO;
 import org.vas.product.pricing.presentation.dtos.UpdateProductDTO;
 
@@ -33,7 +33,7 @@ import jakarta.ws.rs.core.MediaType;
 public class ProductsController {
 
     @Inject
-    private ProductService service;
+    private ProductPriceService service;
 
     @GET
     @Operation(summary = "List all products prices")

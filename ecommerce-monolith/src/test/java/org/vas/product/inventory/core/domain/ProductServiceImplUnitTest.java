@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.vas.product.inventory.core.adapters.ProductRepository;
-import org.vas.product.inventory.core.ports.ProductService;
+import org.vas.product.inventory.core.ports.ProductInventoryService;
 
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -22,7 +22,7 @@ import jakarta.inject.Inject;
 public class ProductServiceImplUnitTest {
 
     @Inject
-    private ProductService productService;
+    private ProductInventoryService productService;
     @InjectMock
     private ProductRepository productRepository;
 

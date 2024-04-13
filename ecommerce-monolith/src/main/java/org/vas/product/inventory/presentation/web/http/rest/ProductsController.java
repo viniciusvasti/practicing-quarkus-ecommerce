@@ -11,7 +11,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.jboss.resteasy.reactive.RestResponse.StatusCode;
 import org.vas.product.inventory.core.domain.ProductInventory;
-import org.vas.product.inventory.core.ports.ProductService;
+import org.vas.product.inventory.core.ports.ProductInventoryService;
 import org.vas.product.inventory.presentation.dtos.CreateProductDTO;
 import org.vas.product.inventory.presentation.dtos.UpdateProductDTO;
 
@@ -33,7 +33,7 @@ import jakarta.ws.rs.core.MediaType;
 public class ProductsController {
 
     @Inject
-    private ProductService service;
+    private ProductInventoryService service;
 
     @GET
     @Operation(summary = "List all products inventory")

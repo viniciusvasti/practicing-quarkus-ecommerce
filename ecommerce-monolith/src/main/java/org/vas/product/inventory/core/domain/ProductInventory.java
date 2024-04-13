@@ -58,4 +58,8 @@ public class ProductInventory extends PanacheEntity {
 
         return skuIsValid && stockUnitsIsValid;
     }
+
+    public void decreaseStockUnits(int quantity) {
+        this.stockUnits -= quantity;
+    }
 }

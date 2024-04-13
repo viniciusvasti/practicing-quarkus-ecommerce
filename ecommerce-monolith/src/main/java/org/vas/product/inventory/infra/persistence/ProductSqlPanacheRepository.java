@@ -41,4 +41,9 @@ public class ProductSqlPanacheRepository implements ProductRepository {
         });
     }
 
+    @Override
+    public List<ProductInventory> findBySkus(List<String> skus) {
+        return ProductInventory.list("sku in ?1", skus);
+    }
+
 }
