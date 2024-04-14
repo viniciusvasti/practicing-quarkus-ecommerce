@@ -19,7 +19,7 @@ import jakarta.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "5. Products Catalog", description = "List of all products organized by category to be listed in the store products page")
-public class ProductsCatalogController {
+public class ProductsCatalogResource {
 
     @Inject
     private ApplicationService appService;

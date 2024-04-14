@@ -9,8 +9,8 @@ import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-@TestHTTPEndpoint(ProductsCatalogController.class)
-public class ProductsCatalogControllerIntegrationTest {
+@TestHTTPEndpoint(ProductsCatalogResource.class)
+public class ProductsCatalogResourceIntegrationTest {
 
     @Test
     void testGetProductCatalog() {
