@@ -6,10 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
 import java.math.BigDecimal;
-
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -18,11 +17,11 @@ import org.vas.product.pricing.core.adapters.ProductRepository;
 import org.vas.product.pricing.core.domain.ProductPrice;
 import org.vas.product.pricing.presentation.dtos.CreateProductDTO;
 import org.vas.product.pricing.presentation.dtos.UpdateProductDTO;
-
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
+import jakarta.transaction.Transactional;
 
 @QuarkusTest
 @TestHTTPEndpoint(ProductsController.class)
@@ -30,6 +29,14 @@ import io.quarkus.test.junit.mockito.InjectSpy;
 public class ProductsControllerIntegrationTest {
     @InjectSpy
     private ProductRepository productRepository;
+    private static ProductPrice productToBeUpdated;
+
+    @BeforeAll
+    @Transactional
+    public static void setup() {
+        productToBeUpdated = new ProductPrice("42342342", BigDecimal.valueOf(10));
+        productToBeUpdated.persist();
+    }
 
     @Test
     @Order(1)
@@ -131,13 +138,11 @@ public class ProductsControllerIntegrationTest {
     @Test
     @TestTransaction
     void testUpdateProduct() {
-        ProductPrice product = productRepository.findAllProducts().iterator().next();
-
-        UpdateProductDTO updateProductDTO = new UpdateProductDTO(product.getId(), BigDecimal.valueOf(350.00));
+        UpdateProductDTO updateProductDTO = new UpdateProductDTO(productToBeUpdated.getId(), BigDecimal.valueOf(350.00));
         given()
                 .header("Content-type", "application/json")
                 .body(updateProductDTO)
-                .when().patch("/" + product.getId())
+                .when().patch("/" + productToBeUpdated.getId())
                 .then()
                 .statusCode(202)
                 .body(is(""));

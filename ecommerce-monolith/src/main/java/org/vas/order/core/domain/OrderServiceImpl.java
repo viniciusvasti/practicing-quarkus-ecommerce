@@ -55,15 +55,14 @@ public class OrderServiceImpl implements OrderService {
 
     private Order mapToOrder(CreateOrderDTO orderDto) {
         List<OrderedProduct> items = orderDto.items().stream()
-                .map(item -> new OrderedProduct(item.sku(), item.quantity()))
-                .toList();
+                .map(item -> new OrderedProduct(item.sku(), item.quantity())).toList();
         Order order = new Order(items, orderDto.paymentAmount());
         return order;
     }
 
     /**
-     * Makes sure the payment amount in the order matches the total amount of the
-     * items included in the order
+     * Makes sure the payment amount in the order matches the total amount of the items included in
+     * the order
      * 
      * @param order
      * @return boolean
@@ -73,7 +72,8 @@ public class OrderServiceImpl implements OrderService {
         Map<String, ProductPrice> prices = priceService.findBySkus(skus).stream()
                 .collect(Collectors.toMap(ProductPrice::getSku, Function.identity()));
         BigDecimal total = order.getItems().stream()
-                .map(item -> prices.get(item.getSku()).getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .map(item -> prices.get(item.getSku()).getPrice()
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return total.compareTo(order.getPaymentAmount()) == 0;
     }

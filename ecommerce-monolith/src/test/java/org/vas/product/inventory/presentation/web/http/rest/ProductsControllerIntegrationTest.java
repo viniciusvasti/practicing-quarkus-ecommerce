@@ -6,13 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -21,11 +20,11 @@ import org.vas.product.inventory.core.adapters.ProductRepository;
 import org.vas.product.inventory.core.domain.ProductInventory;
 import org.vas.product.inventory.presentation.dtos.CreateProductDTO;
 import org.vas.product.inventory.presentation.dtos.UpdateProductDTO;
-
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
+import jakarta.transaction.Transactional;
 
 @QuarkusTest
 @TestHTTPEndpoint(ProductsController.class)
@@ -33,6 +32,14 @@ import io.quarkus.test.junit.mockito.InjectSpy;
 public class ProductsControllerIntegrationTest {
     @InjectSpy
     private ProductRepository productRepository;
+    private static ProductInventory productToBeUpdated;
+
+    @BeforeAll
+    @Transactional
+    public static void setup() {
+        productToBeUpdated = new ProductInventory("42342342", 10);
+        productToBeUpdated.persist();
+    }
 
     @Test
     @Order(1)
@@ -143,13 +150,12 @@ public class ProductsControllerIntegrationTest {
     @Test
     @TestTransaction
     void testUpdateProduct() {
-        ProductInventory product = productRepository.findAllProducts().iterator().next();
-        UpdateProductDTO updateProductDTO = new UpdateProductDTO(product.getId(),
+        UpdateProductDTO updateProductDTO = new UpdateProductDTO(productToBeUpdated.getId(),
                 350);
         given()
                 .header("Content-type", "application/json")
                 .body(updateProductDTO)
-                .when().patch("/" + product.getId())
+                .when().patch("/" + productToBeUpdated.getId())
                 .then()
                 .statusCode(202)
                 .body(is(""));
