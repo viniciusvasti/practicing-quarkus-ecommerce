@@ -13,10 +13,10 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.vas.product.pricing.core.adapters.ProductRepository;
+import org.vas.product.pricing.core.adapters.ProductPriceRepository;
 import org.vas.product.pricing.core.domain.ProductPrice;
-import org.vas.product.pricing.presentation.dtos.CreateProductDTO;
-import org.vas.product.pricing.presentation.dtos.UpdateProductDTO;
+import org.vas.product.pricing.presentation.dtos.CreateProductPriceDTO;
+import org.vas.product.pricing.presentation.dtos.UpdateProductPriceDTO;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -24,11 +24,11 @@ import io.quarkus.test.junit.mockito.InjectSpy;
 import jakarta.transaction.Transactional;
 
 @QuarkusTest
-@TestHTTPEndpoint(ProductsController.class)
+@TestHTTPEndpoint(ProductPriceResource.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class ProductsControllerIntegrationTest {
+public class ProductPriceResourceIntegrationTest {
     @InjectSpy
-    private ProductRepository productRepository;
+    private ProductPriceRepository productRepository;
     private static ProductPrice productToBeUpdated;
 
     @BeforeAll
@@ -115,7 +115,7 @@ public class ProductsControllerIntegrationTest {
 
     @Test
     void testCreateProduct() {
-        CreateProductDTO createProductDTO = new CreateProductDTO("10000009", BigDecimal.valueOf(300.00));
+        CreateProductPriceDTO createProductDTO = new CreateProductPriceDTO("10000009", BigDecimal.valueOf(300.00));
 
         ProductPrice product = given()
                 .header("Content-type", "application/json")
@@ -138,7 +138,7 @@ public class ProductsControllerIntegrationTest {
     @Test
     @TestTransaction
     void testUpdateProduct() {
-        UpdateProductDTO updateProductDTO = new UpdateProductDTO(productToBeUpdated.getId(), BigDecimal.valueOf(350.00));
+        UpdateProductPriceDTO updateProductDTO = new UpdateProductPriceDTO(productToBeUpdated.getId(), BigDecimal.valueOf(350.00));
         given()
                 .header("Content-type", "application/json")
                 .body(updateProductDTO)

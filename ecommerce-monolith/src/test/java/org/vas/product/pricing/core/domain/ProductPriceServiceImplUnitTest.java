@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.vas.product.pricing.core.adapters.ProductRepository;
+import org.vas.product.pricing.core.adapters.ProductPriceRepository;
 import org.vas.product.pricing.core.ports.ProductPriceService;
 
 import io.quarkus.test.InjectMock;
@@ -20,12 +20,12 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 
 @QuarkusTest
-public class ProductServiceImplUnitTest {
+public class ProductPriceServiceImplUnitTest {
 
     @Inject
     private ProductPriceService productService;
     @InjectMock
-    private ProductRepository productRepository;
+    private ProductPriceRepository productRepository;
 
     private final Optional<ProductPrice> productBoseNC700 = Optional.of(new ProductPrice("00000001", BigDecimal.valueOf(300.00)));
 

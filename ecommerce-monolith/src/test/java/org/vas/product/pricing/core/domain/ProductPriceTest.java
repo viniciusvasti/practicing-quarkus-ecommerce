@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-public class ProductTest {
+public class ProductPriceTest {
     @Test
     void testValidProduct() {
         ProductPrice product = new ProductPrice("00000001", BigDecimal.valueOf(300.00));

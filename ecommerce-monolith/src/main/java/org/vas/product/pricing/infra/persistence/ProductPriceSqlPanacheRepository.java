@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.vas.product.pricing.core.adapters.ProductRepository;
+import org.vas.product.pricing.core.adapters.ProductPriceRepository;
 import org.vas.product.pricing.core.domain.ProductPrice;
 
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ProductSqlPanacheRepository implements ProductRepository {
+public class ProductPriceSqlPanacheRepository implements ProductPriceRepository {
 
     @Override
     public ProductPrice saveProduct(ProductPrice product) {

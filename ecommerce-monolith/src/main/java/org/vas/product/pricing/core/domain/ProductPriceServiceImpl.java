@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.vas.product.pricing.core.adapters.ProductRepository;
+import org.vas.product.pricing.core.adapters.ProductPriceRepository;
 import org.vas.product.pricing.core.ports.ProductPriceService;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
 public class ProductPriceServiceImpl implements ProductPriceService {
 
     @Inject
-    private ProductRepository productRepository;
+    private ProductPriceRepository productRepository;
 
     public Optional<ProductPrice> findById(Long id) {
         return productRepository.findProductById(id);
