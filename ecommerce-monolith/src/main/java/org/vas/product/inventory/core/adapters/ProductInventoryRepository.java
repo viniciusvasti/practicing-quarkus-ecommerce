@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.vas.product.inventory.core.domain.ProductInventory;
 
-public interface ProductRepository {
+public interface ProductInventoryRepository {
     ProductInventory saveProduct(ProductInventory product);
     Optional<ProductInventory> findProductById(Long id);
     Set<ProductInventory> findAllProducts();

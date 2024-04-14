@@ -18,7 +18,7 @@ import org.vas.order.core.domain.Order;
 import org.vas.order.core.domain.OrderStatus;
 import org.vas.order.presentation.dtos.CreateOrderDTO;
 import org.vas.order.presentation.dtos.CreateOrderItemDTO;
-import org.vas.product.inventory.core.adapters.ProductRepository;
+import org.vas.product.inventory.core.adapters.ProductInventoryRepository;
 import org.vas.product.inventory.core.domain.ProductInventory;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
 
@@ -34,7 +34,7 @@ public class OrderControllerIntegrationTest {
     @InjectSpy
     private ProductInventoryService inventoryService;
     @InjectSpy
-    private ProductRepository productRepository;
+    private ProductInventoryRepository productRepository;
 
     @Test
     void testSubmitCorrectOrder() {

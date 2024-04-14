@@ -9,17 +9,17 @@ import java.util.stream.Collectors;
 import org.vas.order.core.domain.Order;
 import org.vas.order.core.domain.OrderedProduct;
 import org.vas.order.core.domain.exceptions.NotEnoughStockUnitsException;
-import org.vas.product.inventory.core.adapters.ProductRepository;
+import org.vas.product.inventory.core.adapters.ProductInventoryRepository;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class ProductServiceImpl implements ProductInventoryService {
+public class ProductInventoryServiceImpl implements ProductInventoryService {
 
     @Inject
-    private ProductRepository productRepository;
+    private ProductInventoryRepository productRepository;
 
     public Optional<ProductInventory> findById(Long id) {
         return productRepository.findProductById(id);

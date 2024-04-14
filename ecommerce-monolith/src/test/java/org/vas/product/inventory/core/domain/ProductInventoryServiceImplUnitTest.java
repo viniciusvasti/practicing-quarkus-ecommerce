@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.vas.product.inventory.core.adapters.ProductRepository;
+import org.vas.product.inventory.core.adapters.ProductInventoryRepository;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
 
 import io.quarkus.test.InjectMock;
@@ -19,12 +19,12 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 
 @QuarkusTest
-public class ProductServiceImplUnitTest {
+public class ProductInventoryServiceImplUnitTest {
 
     @Inject
     private ProductInventoryService productService;
     @InjectMock
-    private ProductRepository productRepository;
+    private ProductInventoryRepository productRepository;
 
     private final Optional<ProductInventory> productBoseNC700 = Optional.of(new ProductInventory("00000001", 300));
 

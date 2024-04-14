@@ -12,8 +12,8 @@ import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.jboss.resteasy.reactive.RestResponse.StatusCode;
 import org.vas.product.inventory.core.domain.ProductInventory;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
-import org.vas.product.inventory.presentation.dtos.CreateProductDTO;
-import org.vas.product.inventory.presentation.dtos.UpdateProductDTO;
+import org.vas.product.inventory.presentation.dtos.CreateProductInventoryDTO;
+import org.vas.product.inventory.presentation.dtos.UpdateProductInventoryDTO;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "4. Products Inventory", description = "Management of products inventory")
-public class ProductsController {
+public class ProductInventoryResource {
 
     @Inject
     private ProductInventoryService service;
@@ -63,7 +63,7 @@ public class ProductsController {
             @APIResponse(responseCode = "201", description = "Product created"),
             @APIResponse(responseCode = "400", description = "Invalid product")
     })
-    public RestResponse<ProductInventory> create(CreateProductDTO productDto) {
+    public RestResponse<ProductInventory> create(CreateProductInventoryDTO productDto) {
         // TODO: handle invalid product exception
         ProductInventory product = new ProductInventory(productDto.sku(), productDto.stockUnits());
         var created = service.create(product);
@@ -80,7 +80,7 @@ public class ProductsController {
             @APIResponse(responseCode = "400", description = "Invalid product"),
             @APIResponse(responseCode = "404", description = "Product not found")
     })
-    public void update(@PathParam("id") String id, UpdateProductDTO product) {
+    public void update(@PathParam("id") String id, UpdateProductInventoryDTO product) {
         // TODO: handle invalid product exception
         service.update(new ProductInventory(Long.parseLong(id), "", product.stockUnits()));
     }

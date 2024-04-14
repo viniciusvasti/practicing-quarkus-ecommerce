@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class ProductTest {
+public class ProductInventoryTest {
     @Test
     void testValidProduct() {
         ProductInventory product = new ProductInventory("00000001", 300);

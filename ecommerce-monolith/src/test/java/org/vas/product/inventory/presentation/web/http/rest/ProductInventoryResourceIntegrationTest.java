@@ -16,10 +16,10 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.vas.product.inventory.core.adapters.ProductRepository;
+import org.vas.product.inventory.core.adapters.ProductInventoryRepository;
 import org.vas.product.inventory.core.domain.ProductInventory;
-import org.vas.product.inventory.presentation.dtos.CreateProductDTO;
-import org.vas.product.inventory.presentation.dtos.UpdateProductDTO;
+import org.vas.product.inventory.presentation.dtos.CreateProductInventoryDTO;
+import org.vas.product.inventory.presentation.dtos.UpdateProductInventoryDTO;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -27,11 +27,11 @@ import io.quarkus.test.junit.mockito.InjectSpy;
 import jakarta.transaction.Transactional;
 
 @QuarkusTest
-@TestHTTPEndpoint(ProductsController.class)
+@TestHTTPEndpoint(ProductInventoryResource.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class ProductsControllerIntegrationTest {
+public class ProductInventoryResourceIntegrationTest {
     @InjectSpy
-    private ProductRepository productRepository;
+    private ProductInventoryRepository productRepository;
     private static ProductInventory productToBeUpdated;
 
     @BeforeAll
@@ -128,7 +128,7 @@ public class ProductsControllerIntegrationTest {
 
     @Test
     void testCreateProduct() {
-        CreateProductDTO createProductDTO = new CreateProductDTO("00000009", 8);
+        CreateProductInventoryDTO createProductDTO = new CreateProductInventoryDTO("00000009", 8);
         ProductInventory product = given()
                 .header("Content-type", "application/json")
                 .body(createProductDTO)
@@ -150,7 +150,7 @@ public class ProductsControllerIntegrationTest {
     @Test
     @TestTransaction
     void testUpdateProduct() {
-        UpdateProductDTO updateProductDTO = new UpdateProductDTO(productToBeUpdated.getId(),
+        UpdateProductInventoryDTO updateProductDTO = new UpdateProductInventoryDTO(productToBeUpdated.getId(),
                 350);
         given()
                 .header("Content-type", "application/json")
