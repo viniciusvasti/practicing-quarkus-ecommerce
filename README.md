@@ -3,7 +3,7 @@
 - [x] SOLID
 - [x] Clean Code
 - [x] Clean Architecture
-- [ ] DTO design pattern (Data Transfer Object)
+- [x] DTO design pattern (Data Transfer Object)
 
 - [x] Monolith
 - [x] REST API (JAX-RS)
@@ -21,6 +21,8 @@
 - [ ] Event-Driven
 - [ ] Microservices Orchestration
 - [ ] Microservices Choreography
+- [ ] CQRS
+- [ ] Event Sourcing
 
 - [x] Unit Tests (JUnit)
 - [x] Integration Tests (JUnit)
