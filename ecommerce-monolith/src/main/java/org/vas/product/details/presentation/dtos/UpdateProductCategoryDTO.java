@@ -1,4 +1,4 @@
-package org.vas.product.catalog.presentation.dtos;
+package org.vas.product.details.presentation.dtos;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 

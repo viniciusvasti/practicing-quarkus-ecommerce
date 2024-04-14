@@ -1,9 +1,8 @@
-package org.vas.product.catalog.core.adapters;
+package org.vas.product.details.core.adapters;
 
 import java.util.Optional;
 import java.util.Set;
-
-import org.vas.product.catalog.core.domain.ProductCategory;
+import org.vas.product.details.core.domain.ProductCategory;
 
 public interface ProductCategoryRepository {
     ProductCategory saveProductCategory(ProductCategory productCategory);

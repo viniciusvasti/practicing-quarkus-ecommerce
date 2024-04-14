@@ -1,4 +1,4 @@
-package org.vas.product.catalog.presentation.web.http.rest;
+package org.vas.product.details.presentation.web.http.rest;
 
 import java.util.Set;
 
@@ -9,12 +9,11 @@ import org.jboss.resteasy.reactive.ResponseStatus;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.jboss.resteasy.reactive.RestResponse.StatusCode;
-import org.vas.product.catalog.core.domain.Product;
-import org.vas.product.catalog.core.domain.ProductCategory;
-import org.vas.product.catalog.core.ports.ProductService;
-import org.vas.product.catalog.presentation.dtos.CreateProductDTO;
-import org.vas.product.catalog.presentation.dtos.UpdateProductDTO;
-
+import org.vas.product.details.core.domain.Product;
+import org.vas.product.details.core.domain.ProductCategory;
+import org.vas.product.details.core.ports.ProductService;
+import org.vas.product.details.presentation.dtos.CreateProductDTO;
+import org.vas.product.details.presentation.dtos.UpdateProductDTO;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;

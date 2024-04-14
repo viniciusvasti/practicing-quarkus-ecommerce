@@ -1,9 +1,8 @@
-package org.vas.product.catalog.core.ports;
+package org.vas.product.details.core.ports;
 
 import java.util.Optional;
 import java.util.Set;
-
-import org.vas.product.catalog.core.domain.ProductCategory;
+import org.vas.product.details.core.domain.ProductCategory;
 
 public interface ProductCategoryService {
     Optional<ProductCategory> findById(Long id);

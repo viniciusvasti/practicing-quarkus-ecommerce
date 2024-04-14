@@ -1,9 +1,8 @@
-package org.vas.product.catalog.core.adapters;
+package org.vas.product.details.core.adapters;
 
 import java.util.Optional;
 import java.util.Set;
-
-import org.vas.product.catalog.core.domain.Product;
+import org.vas.product.details.core.domain.Product;
 
 public interface ProductRepository {
     Product saveProduct(Product product);

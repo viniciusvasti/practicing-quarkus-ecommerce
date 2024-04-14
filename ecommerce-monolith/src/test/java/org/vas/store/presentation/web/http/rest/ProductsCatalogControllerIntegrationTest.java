@@ -4,8 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.jupiter.api.Test;
-import org.vas.product.catalog.core.domain.ProductCategory;
-
+import org.vas.product.details.core.domain.ProductCategory;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 

@@ -1,14 +1,12 @@
-package org.vas.product.catalog.infra.persistence;
+package org.vas.product.details.infra.persistence;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import org.vas.product.catalog.core.adapters.ProductRepository;
-import org.vas.product.catalog.core.domain.Product;
-import org.vas.product.catalog.core.domain.ProductCategory;
-
+import org.vas.product.details.core.adapters.ProductRepository;
+import org.vas.product.details.core.domain.Product;
+import org.vas.product.details.core.domain.ProductCategory;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 

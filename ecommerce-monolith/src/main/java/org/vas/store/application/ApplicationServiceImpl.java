@@ -7,9 +7,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.vas.product.catalog.core.ports.ProductCategoryService;
-import org.vas.product.catalog.core.ports.ProductService;
+import org.vas.product.details.core.ports.ProductCategoryService;
+import org.vas.product.details.core.ports.ProductService;
 import org.vas.store.presentation.dtos.ProductCategoryDTO;
 import org.vas.store.presentation.dtos.ProductDTO;
 

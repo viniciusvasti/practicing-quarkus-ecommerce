@@ -10,9 +10,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
-import org.vas.product.catalog.core.ports.ProductCategoryService;
-
+import org.vas.product.details.core.adapters.ProductCategoryRepository;
+import org.vas.product.details.core.domain.ProductCategory;
+import org.vas.product.details.core.ports.ProductCategoryService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

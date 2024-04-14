@@ -1,11 +1,9 @@
-package org.vas.product.catalog.core.domain;
+package org.vas.product.details.core.domain;
 
 import java.util.Optional;
 import java.util.Set;
-
-import org.vas.product.catalog.core.adapters.ProductRepository;
-import org.vas.product.catalog.core.ports.ProductService;
-
+import org.vas.product.details.core.adapters.ProductRepository;
+import org.vas.product.details.core.ports.ProductService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

@@ -1,4 +1,4 @@
-package org.vas.product.catalog.core.domain;
+package org.vas.product.details.core.domain;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 

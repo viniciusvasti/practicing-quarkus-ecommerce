@@ -9,17 +9,17 @@ import static org.mockito.Mockito.verify;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.vas.product.details.core.adapters.ProductCategoryRepository;
+import org.vas.product.details.core.adapters.ProductRepository;
+import org.vas.product.details.core.domain.Product;
+import org.vas.product.details.core.domain.ProductCategory;
+import org.vas.product.details.presentation.dtos.CreateProductDTO;
+import org.vas.product.details.presentation.dtos.UpdateProductDTO;
+import org.vas.product.details.presentation.web.http.rest.ProductsController;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
-import org.vas.product.catalog.core.adapters.ProductRepository;
-import org.vas.product.catalog.core.domain.Product;
-import org.vas.product.catalog.core.domain.ProductCategory;
-import org.vas.product.catalog.presentation.dtos.CreateProductDTO;
-import org.vas.product.catalog.presentation.dtos.UpdateProductDTO;
-
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
