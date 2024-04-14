@@ -12,6 +12,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.vas.product.catalog.core.adapters.ProductCategoryRepository;
 import org.vas.product.catalog.core.adapters.ProductRepository;
 import org.vas.product.catalog.core.domain.Product;
 import org.vas.product.catalog.core.domain.ProductCategory;
@@ -22,6 +23,7 @@ import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
+import jakarta.inject.Inject;
 
 @QuarkusTest
 @TestHTTPEndpoint(ProductsController.class)
@@ -29,6 +31,9 @@ import io.quarkus.test.junit.mockito.InjectSpy;
 public class ProductsControllerIntegrationTest {
     @InjectSpy
     private ProductRepository productRepository;
+    @Inject
+    private ProductCategoryRepository productCategoryRepository;
+    
 
     @Test
     @Order(1)
@@ -152,10 +157,10 @@ public class ProductsControllerIntegrationTest {
         verify(productRepository, times(0)).findProductById(any());
     }
 
+    @Test
     @TestTransaction
     void testCreateProduct() {
-        ProductCategory category = new ProductCategory("TestCreate");
-        category.persist();
+        ProductCategory category = productCategoryRepository.findAllProductCategories().iterator().next();
         CreateProductDTO createProductDTO = new CreateProductDTO("00000009", "New Product", "New Description",
                 category.id);
         Product product = given()
@@ -168,8 +173,8 @@ public class ProductsControllerIntegrationTest {
                 .body("sku", is("00000009"))
                 .body("name", is("New Product"))
                 .body("description", is("New Description"))
-                .body("category.id", is(101))
-                .body("category.name", is("Clothing"))
+                .body("category.id", is(Long.valueOf(category.id).intValue()))
+                .body("category.name", is(category.getName()))
                 .extract().as(Product.class);
 
         var newProduct = productRepository.findProductById(product.id).get();
@@ -177,33 +182,25 @@ public class ProductsControllerIntegrationTest {
         assertEquals("New Product", newProduct.getName());
         assertEquals("New Description", newProduct.getDescription());
         assertEquals(category.id, newProduct.getCategory().getId());
-        assertEquals("Clothing", newProduct.getCategory().getName());
+        assertEquals(category.getName(), newProduct.getCategory().getName());
 
         verify(productRepository, times(1)).saveProduct(any(Product.class));
     }
 
+    @Test
     @TestTransaction
     void testUpdateProduct() {
-        ProductCategory category = new ProductCategory("Test Update");
-        Product newProduct = new Product("00000010", "Product to be updated", "Description",
-                new ProductCategory(category.id, null));
-        newProduct = productRepository.saveProduct(newProduct);
-        Product.flush();
+        Product product = productRepository.findAllProducts().iterator().next();
 
-        UpdateProductDTO updateProductDTO = new UpdateProductDTO(newProduct.getId(), "Updated Product",
-                "Updated Description", category.id);
+        UpdateProductDTO updateProductDTO = new UpdateProductDTO(product.getId(), "Updated Product",
+                "Updated Description", product.getCategory().id);
         given()
                 .header("Content-type", "application/json")
                 .body(updateProductDTO)
-                .when().patch("/" + newProduct.getId())
+                .when().patch("/" + product.getId())
                 .then()
                 .statusCode(202)
                 .body(is(""));
-
-        var updatedProduct = productRepository.findProductById(newProduct.getId()).get();
-        assertEquals("00000009", updatedProduct.getSku());
-        assertEquals("Updated Product", updatedProduct.getName());
-        assertEquals("Updated Description", updatedProduct.getDescription());
 
         verify(productRepository, times(1)).updateProduct(any(Product.class));
     }

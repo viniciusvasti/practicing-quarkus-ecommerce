@@ -105,6 +105,7 @@ public class ProductsCategoryControllerIntegrationTest {
         verify(productCategoryRepository, times(1)).saveProductCategory(newProductCategory);
     }
 
+    @Test
     @TestTransaction
     void testUpdateProductCategory() {
         ProductCategory newCategory = new ProductCategory("Updated Category");
