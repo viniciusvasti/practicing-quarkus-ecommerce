@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.vas.product.details.core.adapters.ProductCategoryRepository;
 import org.vas.product.details.core.ports.ProductCategoryService;
+import org.vas.product.details.presentation.dtos.UpdateProductCategoryDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -30,7 +31,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return productCategory;
     }
 
-    public void update(ProductCategory productCategory) {
+    public void update(UpdateProductCategoryDTO productCategoryDto, Long id) {
+        ProductCategory productCategory = new ProductCategory(id, productCategoryDto.name());
         if (!productCategory.isValid()) {
             throw new IllegalArgumentException("Invalid product category");
         }

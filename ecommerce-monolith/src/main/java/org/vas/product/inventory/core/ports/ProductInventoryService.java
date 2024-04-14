@@ -6,12 +6,14 @@ import java.util.Set;
 
 import org.vas.order.core.domain.Order;
 import org.vas.product.inventory.core.domain.ProductInventory;
+import org.vas.product.inventory.presentation.dtos.CreateProductInventoryDTO;
+import org.vas.product.inventory.presentation.dtos.UpdateProductInventoryDTO;
 
 public interface ProductInventoryService {
     Optional<ProductInventory> findById(Long id);
     Set<ProductInventory> listAll();
-    ProductInventory create(ProductInventory product);
-    void update(ProductInventory product);
+    ProductInventory create(CreateProductInventoryDTO product);
+    void update(UpdateProductInventoryDTO product, Long id);
     List<ProductInventory> findBySkus(List<String> skus);
     void decreaseOrderStockUnits(Order order);
 }

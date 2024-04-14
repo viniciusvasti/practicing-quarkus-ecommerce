@@ -2,6 +2,7 @@ package org.vas.product.details.core.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.vas.product.details.core.adapters.ProductCategoryRepository;
 import org.vas.product.details.core.ports.ProductCategoryService;
+import org.vas.product.details.presentation.dtos.UpdateProductCategoryDTO;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -27,16 +29,14 @@ public class ProductCategoryServiceImplUnitTest {
         // Given
         Long id = 1L;
         var productCategory = Optional.of(new ProductCategory("Electronics"));
-        when(productCategoryService.findById(id))
-                .thenReturn(productCategory);
+        when(productCategoryService.findById(id)).thenReturn(productCategory);
 
         // When
         Optional<ProductCategory> result = productCategoryService.findById(id);
 
         // Then
         assertEquals(productCategory, result);
-        verify(productCategoryRepository, times(1))
-                .findProductCategoryById(id);
+        verify(productCategoryRepository, times(1)).findProductCategoryById(id);
     }
 
     @Test
@@ -54,8 +54,7 @@ public class ProductCategoryServiceImplUnitTest {
         assertEquals(2, result.size());
         assertTrue(result.contains(productCategory1));
         assertTrue(result.contains(productCategory2));
-        verify(productCategoryRepository, times(1))
-                .findAllProductCategories();
+        verify(productCategoryRepository, times(1)).findAllProductCategories();
     }
 
     @Test
@@ -68,21 +67,20 @@ public class ProductCategoryServiceImplUnitTest {
 
         // Then
         assertEquals(name, productCategory.getName());
-        verify(productCategoryRepository, times(1))
-                .saveProductCategory(new ProductCategory(name));
+        verify(productCategoryRepository, times(1)).saveProductCategory(new ProductCategory(name));
     }
 
     @Test
     public void testUpdateProductCategory() {
         // Given
-        ProductCategory productCategory = new ProductCategory("Electronics");
+        UpdateProductCategoryDTO productCategory = new UpdateProductCategoryDTO(1l, "Electronics");
 
         // When
-        productCategoryService.update(productCategory);
+        productCategoryService.update(productCategory, 1L);
 
         // Then
         verify(productCategoryRepository, times(1))
-                .updateProductCategory(productCategory);
+                .updateProductCategory(any(ProductCategory.class));
     }
 
 }

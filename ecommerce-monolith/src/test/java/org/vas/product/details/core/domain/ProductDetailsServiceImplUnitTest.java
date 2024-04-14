@@ -11,6 +11,8 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.vas.product.details.core.adapters.ProductDetailsRepository;
 import org.vas.product.details.core.ports.ProductDetailsService;
+import org.vas.product.details.presentation.dtos.CreateProductDetailsDTO;
+import org.vas.product.details.presentation.dtos.UpdateProductDetailsDTO;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -24,34 +26,31 @@ public class ProductDetailsServiceImplUnitTest {
     private ProductDetailsRepository productRepository;
 
     private final ProductCategory category = new ProductCategory("Electronics");
-    private final Optional<ProductDetails> productBoseNC700 = Optional
-            .of(new ProductDetails("00000001", "Bose NC 700", "Noise Cancelling Headphones", category));
+    private final Optional<ProductDetails> productBoseNC700 = Optional.of(
+            new ProductDetails("00000001", "Bose NC 700", "Noise Cancelling Headphones", category));
 
     @Test
     public void testFindById() {
         // Given
         Long id = 1L;
-        when(productService.findById(id))
-                .thenReturn(productBoseNC700);
+        when(productService.findById(id)).thenReturn(productBoseNC700);
 
         // When
         Optional<ProductDetails> result = productService.findById(id);
 
         // Then
         assertEquals(productBoseNC700, result);
-        verify(productRepository, times(1))
-                .findProductById(id);
+        verify(productRepository, times(1)).findProductById(id);
     }
 
     @Test
     public void testFindAll() {
         // Given
         ProductDetails product1 = productBoseNC700.get();
-        ProductDetails product2 = new ProductDetails("00000002", "Sony WH-1000XM4", "Noise Cancelling Headphones", category);
-        when(productRepository.findAllProducts())
-                .thenReturn(Set.of(product1, product2));
-        when(productRepository.findAllProducts())
-                .thenReturn(Set.of(product1, product2));
+        ProductDetails product2 = new ProductDetails("00000002", "Sony WH-1000XM4",
+                "Noise Cancelling Headphones", category);
+        when(productRepository.findAllProducts()).thenReturn(Set.of(product1, product2));
+        when(productRepository.findAllProducts()).thenReturn(Set.of(product1, product2));
 
         // When
         Set<ProductDetails> result = productService.listAll();
@@ -60,8 +59,7 @@ public class ProductDetailsServiceImplUnitTest {
         assertEquals(2, result.size());
         assertTrue(result.contains(product1));
         assertTrue(result.contains(product2));
-        verify(productRepository, times(1))
-                .findAllProducts();
+        verify(productRepository, times(1)).findAllProducts();
     }
 
     @Test
@@ -70,7 +68,7 @@ public class ProductDetailsServiceImplUnitTest {
         String sku = "00000001";
         String name = "Sony WH-1000XM4";
         String description = "Noise Cancelling Headphones";
-        var product = new ProductDetails(1L, sku, name, description, new ProductCategory(category.getId(), ""));
+        var product = new CreateProductDetailsDTO(sku, name, description, category.getId());
         when(productRepository.saveProduct(any(ProductDetails.class)))
                 .thenReturn(new ProductDetails(1L, "00000001", name, description, category));
 
@@ -86,16 +84,15 @@ public class ProductDetailsServiceImplUnitTest {
     @Test
     public void testUpdateProduct() {
         // Given
-        ProductDetails product = productBoseNC700.get();
-        when(productRepository.findProductById(product.getId()))
-                .thenReturn(productBoseNC700);
+        UpdateProductDetailsDTO product = new UpdateProductDetailsDTO(productBoseNC700.get().id,
+                "Sony WH-1000XM4", "Noise Cancelling Headphones", category.getId());
+        when(productRepository.findProductById(product.id())).thenReturn(productBoseNC700);
 
         // When
-        productService.update(product);
+        productService.update(product, product.id());
 
         // Then
-        verify(productRepository, times(1))
-                .updateProduct(product);
+        verify(productRepository, times(1)).updateProduct(any(ProductDetails.class));
     }
 
 }

@@ -5,13 +5,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.vas.order.core.domain.Order;
 import org.vas.order.core.domain.OrderedProduct;
 import org.vas.order.core.domain.exceptions.NotEnoughStockUnitsException;
 import org.vas.product.inventory.core.adapters.ProductInventoryRepository;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
-
+import org.vas.product.inventory.presentation.dtos.CreateProductInventoryDTO;
+import org.vas.product.inventory.presentation.dtos.UpdateProductInventoryDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -29,14 +29,16 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
         return productRepository.findAllProducts();
     }
 
-    public ProductInventory create(ProductInventory product) {
+    public ProductInventory create(CreateProductInventoryDTO productDto) {
+        var product = new ProductInventory(productDto.sku(), productDto.stockUnits());
         if (!product.isValid()) {
             throw new IllegalArgumentException("Invalid product ");
         }
         return productRepository.saveProduct(product);
     }
 
-    public void update(ProductInventory product) {
+    public void update(UpdateProductInventoryDTO productDto, Long id) {
+        var product = new ProductInventory(id, null, productDto.stockUnits());
         var existingProduct = productRepository.findProductById(product.id).orElseThrow(
                 () -> new IllegalArgumentException("Product with id " + product.id + " not found"));
         product.setSku(existingProduct.getSku());

@@ -6,7 +6,8 @@ import java.util.Set;
 
 import org.vas.product.pricing.core.adapters.ProductPriceRepository;
 import org.vas.product.pricing.core.ports.ProductPriceService;
-
+import org.vas.product.pricing.presentation.dtos.CreateProductPriceDTO;
+import org.vas.product.pricing.presentation.dtos.UpdateProductPriceDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -24,14 +25,16 @@ public class ProductPriceServiceImpl implements ProductPriceService {
         return productRepository.findAllProducts();
     }
 
-    public ProductPrice create(ProductPrice product) {
+    public ProductPrice create(CreateProductPriceDTO productDto) {
+        ProductPrice product = new ProductPrice(productDto.sku(), productDto.price());
         if (!product.isValid()) {
             throw new IllegalArgumentException("Invalid product ");
         }
         return productRepository.saveProduct(product);
     }
 
-    public void update(ProductPrice product) {
+    public void update(UpdateProductPriceDTO productDto, Long id) {
+        ProductPrice product = new ProductPrice(id, null, productDto.price());
         var existingProduct = productRepository.findProductById(product.id).orElseThrow(
                 () -> new IllegalArgumentException("Product with id " + product.id + " not found"));
         product.setSku(existingProduct.getSku());

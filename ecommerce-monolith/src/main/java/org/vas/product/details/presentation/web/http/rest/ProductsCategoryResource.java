@@ -79,6 +79,6 @@ public class ProductsCategoryResource {
     })
     public void update(@PathParam("id") String id, UpdateProductCategoryDTO productCategory) {
         // TODO: handle invalid product category exception
-        service.update(new ProductCategory(Long.parseLong(id), productCategory.name()));
+        service.update(productCategory, Long.parseLong(id));
     }
 }

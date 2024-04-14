@@ -65,8 +65,7 @@ public class ProductInventoryResource {
     })
     public RestResponse<ProductInventory> create(CreateProductInventoryDTO productDto) {
         // TODO: handle invalid product exception
-        ProductInventory product = new ProductInventory(productDto.sku(), productDto.stockUnits());
-        var created = service.create(product);
+        var created = service.create(productDto);
         return RestResponse.status(Status.CREATED, created);
     }
 
@@ -80,8 +79,8 @@ public class ProductInventoryResource {
             @APIResponse(responseCode = "400", description = "Invalid product"),
             @APIResponse(responseCode = "404", description = "Product not found")
     })
-    public void update(@PathParam("id") String id, UpdateProductInventoryDTO product) {
+    public void update(@PathParam("id") String id, UpdateProductInventoryDTO productDto) {
         // TODO: handle invalid product exception
-        service.update(new ProductInventory(Long.parseLong(id), "", product.stockUnits()));
+        service.update(productDto, Long.parseLong(id));
     }
 }

@@ -6,14 +6,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.util.Optional;
 import java.util.Set;
-
 import org.junit.jupiter.api.Test;
 import org.vas.product.inventory.core.adapters.ProductInventoryRepository;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
-
+import org.vas.product.inventory.presentation.dtos.CreateProductInventoryDTO;
+import org.vas.product.inventory.presentation.dtos.UpdateProductInventoryDTO;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -26,22 +25,21 @@ public class ProductInventoryServiceImplUnitTest {
     @InjectMock
     private ProductInventoryRepository productRepository;
 
-    private final Optional<ProductInventory> productBoseNC700 = Optional.of(new ProductInventory("00000001", 300));
+    private final Optional<ProductInventory> productBoseNC700 =
+            Optional.of(new ProductInventory("00000001", 300));
 
     @Test
     public void testFindById() {
         // Given
         Long id = 1L;
-        when(productService.findById(id))
-                .thenReturn(productBoseNC700);
+        when(productService.findById(id)).thenReturn(productBoseNC700);
 
         // When
         Optional<ProductInventory> result = productService.findById(id);
 
         // Then
         assertEquals(productBoseNC700, result);
-        verify(productRepository, times(1))
-                .findProductById(id);
+        verify(productRepository, times(1)).findProductById(id);
     }
 
     @Test
@@ -49,10 +47,8 @@ public class ProductInventoryServiceImplUnitTest {
         // Given
         ProductInventory product1 = productBoseNC700.get();
         ProductInventory product2 = new ProductInventory("00000002", 280);
-        when(productRepository.findAllProducts())
-                .thenReturn(Set.of(product1, product2));
-        when(productRepository.findAllProducts())
-                .thenReturn(Set.of(product1, product2));
+        when(productRepository.findAllProducts()).thenReturn(Set.of(product1, product2));
+        when(productRepository.findAllProducts()).thenReturn(Set.of(product1, product2));
 
         // When
         Set<ProductInventory> result = productService.listAll();
@@ -61,8 +57,7 @@ public class ProductInventoryServiceImplUnitTest {
         assertEquals(2, result.size());
         assertTrue(result.contains(product1));
         assertTrue(result.contains(product2));
-        verify(productRepository, times(1))
-                .findAllProducts();
+        verify(productRepository, times(1)).findAllProducts();
     }
 
     @Test
@@ -70,7 +65,7 @@ public class ProductInventoryServiceImplUnitTest {
         // Given
         String sku = "00000001";
         int stockUnits = 280;
-        var product = new ProductInventory(1L, sku, stockUnits);
+        var product = new CreateProductInventoryDTO(sku, stockUnits);
         when(productRepository.saveProduct(any(ProductInventory.class)))
                 .thenReturn(new ProductInventory(1L, "00000001", stockUnits));
 
@@ -86,16 +81,14 @@ public class ProductInventoryServiceImplUnitTest {
     @Test
     public void testUpdateProduct() {
         // Given
-        ProductInventory product = productBoseNC700.get();
-        when(productRepository.findProductById(product.getId()))
-                .thenReturn(productBoseNC700);
+        UpdateProductInventoryDTO product = new UpdateProductInventoryDTO(1L, 280);
+        when(productRepository.findProductById(product.id())).thenReturn(productBoseNC700);
 
         // When
-        productService.update(product);
+        productService.update(product, product.id());
 
         // Then
-        verify(productRepository, times(1))
-                .updateProduct(product);
+        verify(productRepository, times(1)).updateProduct(any(ProductInventory.class));
     }
 
 }

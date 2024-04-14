@@ -1,7 +1,6 @@
 package org.vas.product.details.presentation.web.http.rest;
 
 import java.util.Set;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -10,7 +9,6 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.jboss.resteasy.reactive.RestResponse.StatusCode;
 import org.vas.product.details.core.domain.ProductDetails;
-import org.vas.product.details.core.domain.ProductCategory;
 import org.vas.product.details.core.ports.ProductDetailsService;
 import org.vas.product.details.presentation.dtos.CreateProductDetailsDTO;
 import org.vas.product.details.presentation.dtos.UpdateProductDetailsDTO;
@@ -60,9 +58,7 @@ public class ProductDetailsResource {
     @APIResponse(responseCode = "400", description = "Invalid product")
     public RestResponse<ProductDetails> create(CreateProductDetailsDTO productDto) {
         // TODO: handle invalid product exception
-        ProductDetails product = new ProductDetails(productDto.sku(), productDto.name(), productDto.description(),
-                new ProductCategory(productDto.categoryId(), ""));
-        var created = service.create(product);
+        var created = service.create(productDto);
         return RestResponse.status(Status.CREATED, created);
     }
 
@@ -76,7 +72,6 @@ public class ProductDetailsResource {
     @APIResponse(responseCode = "404", description = "Product not found")
     public void update(@PathParam("id") String id, UpdateProductDetailsDTO product) {
         // TODO: handle invalid product exception
-        service.update(new ProductDetails(Long.parseLong(id), "", product.name(), product.description(),
-                new ProductCategory(product.categoryId(), "")));
+        service.update(product, Long.parseLong(id));
     }
 }
