@@ -9,8 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
 @Schema(name = "Product", description = "A product in the store catalog")
-@Entity
-public class Product extends PanacheEntity {
+@Entity(name = "product_details")
+public class ProductDetails extends PanacheEntity {
     // TODO: set unique constraint
     @Schema(required = true, example = "12345678")
     private String sku;
@@ -21,17 +21,17 @@ public class Product extends PanacheEntity {
     @ManyToOne
     private ProductCategory category;
 
-    public Product() {
+    public ProductDetails() {
     }
 
-    public Product(String sku, String name, String description, ProductCategory category) {
+    public ProductDetails(String sku, String name, String description, ProductCategory category) {
         this.sku = sku;
         this.name = name;
         this.description = description;
         this.category = category;
     }
 
-    public Product(Long id, String sku, String name, String description, ProductCategory category) {
+    public ProductDetails(Long id, String sku, String name, String description, ProductCategory category) {
         this.id = id;
         this.sku = sku;
         this.name = name;

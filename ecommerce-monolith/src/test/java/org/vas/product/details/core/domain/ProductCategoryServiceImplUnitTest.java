@@ -1,17 +1,14 @@
-package org.vas.product.catalog.core.domain;
+package org.vas.product.details.core.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.util.Optional;
 import java.util.Set;
-
 import org.junit.jupiter.api.Test;
 import org.vas.product.details.core.adapters.ProductCategoryRepository;
-import org.vas.product.details.core.domain.ProductCategory;
 import org.vas.product.details.core.ports.ProductCategoryService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;

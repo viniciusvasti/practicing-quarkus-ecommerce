@@ -29,7 +29,7 @@ import jakarta.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "1. Products Category", description = "Management of products categories")
-public class ProductsCategoryController {
+public class ProductsCategoryResource {
 
     @Inject
     private ProductCategoryService service;

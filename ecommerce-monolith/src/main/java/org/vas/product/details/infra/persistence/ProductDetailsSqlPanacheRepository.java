@@ -4,17 +4,17 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.vas.product.details.core.adapters.ProductRepository;
-import org.vas.product.details.core.domain.Product;
+import org.vas.product.details.core.adapters.ProductDetailsRepository;
+import org.vas.product.details.core.domain.ProductDetails;
 import org.vas.product.details.core.domain.ProductCategory;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ProductSqlPanacheRepository implements ProductRepository {
+public class ProductDetailsSqlPanacheRepository implements ProductDetailsRepository {
 
     @Override
-    public Product saveProduct(Product product) {
+    public ProductDetails saveProduct(ProductDetails product) {
         // TODO: handle category not found
         Optional<ProductCategory> categoryOp = ProductCategory.findByIdOptional(product.getCategory().getId());
         if (categoryOp.isEmpty()) {
@@ -26,20 +26,20 @@ public class ProductSqlPanacheRepository implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findProductById(Long id) {
-        return Product.findByIdOptional(id);
+    public Optional<ProductDetails> findProductById(Long id) {
+        return ProductDetails.findByIdOptional(id);
     }
 
     @Override
-    public Set<Product> findAllProducts() {
-        List<Product> products = Product.listAll(Sort.by("name").ascending());
+    public Set<ProductDetails> findAllProducts() {
+        List<ProductDetails> products = ProductDetails.listAll(Sort.by("name").ascending());
         // LinkedHashSet to keep the order of list elements
-        return new LinkedHashSet<Product>(products);
+        return new LinkedHashSet<ProductDetails>(products);
     }
 
     @Override
-    public void updateProduct(Product product) {
-        Optional<Product> existingProduct = Product.findByIdOptional(product.id);
+    public void updateProduct(ProductDetails product) {
+        Optional<ProductDetails> existingProduct = ProductDetails.findByIdOptional(product.id);
         existingProduct.ifPresent(pc -> {
             Optional<ProductCategory> categoryOp = ProductCategory.findByIdOptional(product.getCategory().getId());
             if (categoryOp.isEmpty()) {

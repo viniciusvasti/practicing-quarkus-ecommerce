@@ -1,4 +1,4 @@
-package org.vas.product.catalog.presentation.web.http.rest;
+package org.vas.product.details.presentation.web.http.rest;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -6,26 +6,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.vas.product.details.core.adapters.ProductCategoryRepository;
 import org.vas.product.details.core.domain.ProductCategory;
 import org.vas.product.details.presentation.dtos.CreateProductCategoryDTO;
 import org.vas.product.details.presentation.dtos.UpdateProductCategoryDTO;
-import org.vas.product.details.presentation.web.http.rest.ProductsCategoryController;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
 
 @QuarkusTest
-@TestHTTPEndpoint(ProductsCategoryController.class)
+@TestHTTPEndpoint(ProductsCategoryResource.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class ProductsCategoryControllerIntegrationTest {
+public class ProductsCategoryResourceIntegrationTest {
     @InjectSpy
     private ProductCategoryRepository productCategoryRepository;
 

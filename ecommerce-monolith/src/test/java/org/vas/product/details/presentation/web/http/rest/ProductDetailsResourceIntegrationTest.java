@@ -1,4 +1,4 @@
-package org.vas.product.catalog.presentation.web.http.rest;
+package org.vas.product.details.presentation.web.http.rest;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -6,20 +6,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.vas.product.details.core.adapters.ProductCategoryRepository;
-import org.vas.product.details.core.adapters.ProductRepository;
-import org.vas.product.details.core.domain.Product;
-import org.vas.product.details.core.domain.ProductCategory;
-import org.vas.product.details.presentation.dtos.CreateProductDTO;
-import org.vas.product.details.presentation.dtos.UpdateProductDTO;
-import org.vas.product.details.presentation.web.http.rest.ProductsController;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.vas.product.details.core.adapters.ProductCategoryRepository;
+import org.vas.product.details.core.adapters.ProductDetailsRepository;
+import org.vas.product.details.core.domain.ProductCategory;
+import org.vas.product.details.core.domain.ProductDetails;
+import org.vas.product.details.presentation.dtos.CreateProductDetailsDTO;
+import org.vas.product.details.presentation.dtos.UpdateProductDetailsDTO;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -28,21 +26,21 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 @QuarkusTest
-@TestHTTPEndpoint(ProductsController.class)
+@TestHTTPEndpoint(ProductDetailsResource.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class ProductsControllerIntegrationTest {
+public class ProductDetailsResourceIntegrationTest {
     @InjectSpy
-    private ProductRepository productRepository;
+    private ProductDetailsRepository productRepository;
     @Inject
     private ProductCategoryRepository productCategoryRepository;
-    private static Product productToBeUpdated;
+    private static ProductDetails productToBeUpdated;
 
     @BeforeAll
     @Transactional
     public static void setup() {
         ProductCategory category = new ProductCategory("Test");
         category.persist();
-        productToBeUpdated = new Product("42342342", "To be updated",
+        productToBeUpdated = new ProductDetails("42342342", "To be updated",
                 "Product to be update during patch test", category);
         productToBeUpdated.persist();
     }
@@ -50,7 +48,7 @@ public class ProductsControllerIntegrationTest {
     @Test
     @Order(1)
     void testGetProducts() {
-        var productsCount = Product.count();
+        var productsCount = ProductDetails.count();
 
         given().when().get("").then().statusCode(200).body("size()", is((int) productsCount))
                 .body("[0].id", CoreMatchers.any(Integer.class)).body("[0].sku", is("00000002"))
@@ -135,14 +133,14 @@ public class ProductsControllerIntegrationTest {
     void testCreateProduct() {
         ProductCategory category =
                 productCategoryRepository.findAllProductCategories().iterator().next();
-        CreateProductDTO createProductDTO =
-                new CreateProductDTO("00000009", "New Product", "New Description", category.id);
-        Product product = given().header("Content-type", "application/json").body(createProductDTO)
+        CreateProductDetailsDTO createProductDTO =
+                new CreateProductDetailsDTO("00000009", "New Product", "New Description", category.id);
+        ProductDetails product = given().header("Content-type", "application/json").body(createProductDTO)
                 .when().post("").then().statusCode(201)
                 .body("id", is(CoreMatchers.any(Integer.class))).body("sku", is("00000009"))
                 .body("name", is("New Product")).body("description", is("New Description"))
                 .body("category.id", is(Long.valueOf(category.id).intValue()))
-                .body("category.name", is(category.getName())).extract().as(Product.class);
+                .body("category.name", is(category.getName())).extract().as(ProductDetails.class);
 
         var newProduct = productRepository.findProductById(product.id).get();
         assertEquals("00000009", newProduct.getSku());
@@ -151,16 +149,16 @@ public class ProductsControllerIntegrationTest {
         assertEquals(category.id, newProduct.getCategory().getId());
         assertEquals(category.getName(), newProduct.getCategory().getName());
 
-        verify(productRepository, times(1)).saveProduct(any(Product.class));
+        verify(productRepository, times(1)).saveProduct(any(ProductDetails.class));
     }
 
     @Test
     void testUpdateProduct() {
-        UpdateProductDTO updateProductDTO = new UpdateProductDTO(productToBeUpdated.getId(),
+        UpdateProductDetailsDTO updateProductDTO = new UpdateProductDetailsDTO(productToBeUpdated.getId(),
                 "Updated Product", "Updated Description", productToBeUpdated.getCategory().id);
         given().header("Content-type", "application/json").body(updateProductDTO).when()
                 .patch("/" + productToBeUpdated.getId()).then().statusCode(202).body(is(""));
 
-        verify(productRepository, times(1)).updateProduct(any(Product.class));
+        verify(productRepository, times(1)).updateProduct(any(ProductDetails.class));
     }
 }

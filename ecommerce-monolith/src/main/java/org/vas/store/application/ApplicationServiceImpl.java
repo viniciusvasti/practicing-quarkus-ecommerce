@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.vas.product.details.core.ports.ProductCategoryService;
-import org.vas.product.details.core.ports.ProductService;
+import org.vas.product.details.core.ports.ProductDetailsService;
 import org.vas.store.presentation.dtos.ProductCategoryDTO;
 import org.vas.store.presentation.dtos.ProductDTO;
 
@@ -24,7 +24,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Inject
     private org.vas.product.inventory.core.ports.ProductInventoryService productInventoryService;
     @Inject
-    private ProductService productService;
+    private ProductDetailsService productService;
 
     @Override
     public Set<ProductCategoryDTO> listProductsCatalog() {
