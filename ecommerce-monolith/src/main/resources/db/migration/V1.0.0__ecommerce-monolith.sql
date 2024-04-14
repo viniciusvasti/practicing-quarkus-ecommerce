@@ -37,7 +37,7 @@ CREATE TABLE ProductCategory (
 );
 
 ALTER TABLE
-    IF EXISTS Product
+    IF EXISTS product_details
 ADD
     CONSTRAINT FKnkccxbwt1qp2wrqbvb2tfcch4 FOREIGN KEY (category_id) REFERENCES ProductCategory;
 
