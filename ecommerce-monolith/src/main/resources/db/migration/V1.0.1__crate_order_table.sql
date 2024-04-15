@@ -1,5 +1,5 @@
-CREATE sequence customer_order_SEQ START WITH 1 increment by 1;
-CREATE sequence customer_order_item_SEQ START WITH 1 increment by 1;
+CREATE sequence customer_order_SEQ START WITH 1 increment by 50;
+CREATE sequence customer_order_item_SEQ START WITH 1 increment by 50;
 
 CREATE TABLE customer_order (
     id bigint NOT NULL,

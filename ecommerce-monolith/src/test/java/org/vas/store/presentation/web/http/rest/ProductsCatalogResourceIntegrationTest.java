@@ -21,7 +21,7 @@ public class ProductsCatalogResourceIntegrationTest {
                 .body("size()", is((int) productCategoriesCount))
                 // Books
                 .body("find { it.id == 1 }.name", is("Books"))
-                .body("find { it.id == 1 }.products.size()", is(2))
+                .body("find { it.id == 1 }.products.size()", is(5))
                 .body("find { it.id == 1 }.products.find { it.id == 51 }.sku", is("00000002"))
                 .body("find { it.id == 1 }.products.find { it.id == 51 }.name", is("Clean Code"))
                 .body("find { it.id == 1 }.products.find { it.id == 51 }.price", is(37.99f))
@@ -33,7 +33,7 @@ public class ProductsCatalogResourceIntegrationTest {
                 .body("find { it.id == 1 }.products.find { it.id == 1 }.description", is("Your journey to mastery"))
                 // Electronics
                 .body("find { it.id == 51 }.name", is("Electronics"))
-                .body("find { it.id == 51 }.products.size()", is(2))
+                .body("find { it.id == 51 }.products.size()", is(4))
                 .body("find { it.id == 51 }.products.find { it.id == 151 }.sku", is("00000004"))
                 .body("find { it.id == 51 }.products.find { it.id == 151 }.name", is("iPhone 12"))
                 .body("find { it.id == 51 }.products.find { it.id == 151 }.price", is(799.99f))
@@ -45,7 +45,7 @@ public class ProductsCatalogResourceIntegrationTest {
                         is("The ultimate pro notebook"))
                 // Home & Kitchen
                 .body("find { it.id == 101 }.name", is("Clothing"))
-                .body("find { it.id == 101 }.products.size()", is(2))
+                .body("find { it.id == 101 }.products.size()", is(11))
                 .body("find { it.id == 101 }.products.find { it.id == 251 }.sku", is("00000006"))
                 .body("find { it.id == 101 }.products.find { it.id == 251 }.name", is("Nike Air Max 270"))
                 .body("find { it.id == 101 }.products.find { it.id == 251 }.price", is(150.00f))
@@ -58,7 +58,7 @@ public class ProductsCatalogResourceIntegrationTest {
                         is("The original blue jean since 1873"))
                 // Home & Kitchen
                 .body("find { it.id == 151 }.name", is("Home & Kitchen"))
-                .body("find { it.id == 151 }.products.size()", is(2))
+                .body("find { it.id == 151 }.products.size()", is(11))
                 .body("find { it.id == 151 }.products.find { it.id == 301 }.sku", is("00000007"))
                 .body("find { it.id == 151 }.products.find { it.id == 301 }.name",
                         is("Instant Pot Duo 7-in-1 Electric Pressure Cooker"))

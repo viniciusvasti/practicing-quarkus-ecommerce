@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import java.util.List;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -30,33 +31,25 @@ public class ProductsCategoryResourceIntegrationTest {
     @Test
     @Order(1)
     void testGetProductCategories() {
-        var categoriesCount = ProductCategory.count();
+        List<ProductCategory> categories = ProductCategory.listAll();
+        categories.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
 
-        given()
-                .when().get("")
-                .then()
-                .statusCode(200)
-                .body("size()", is((int) categoriesCount))
-                .body("[0].name", is("Books"))
-                .body("[1].id", is(101))
-                .body("[1].name", is("Clothing"))
-                .body("[2].id", is(51))
-                .body("[2].name", is("Electronics"))
-                .body("[3].id", is(151))
-                .body("[3].name", is("Home & Kitchen"));
+        given().when().get("").then().statusCode(200).body("size()", is(categories.size()))
+                .body("[0].name", is(categories.get(0).getName()))
+                .body("[1].id", is(categories.get(1).getId().intValue()))
+                .body("[1].name", is(categories.get(1).getName()))
+                .body("[2].id", is(categories.get(2).getId().intValue()))
+                .body("[2].name", is(categories.get(2).getName()))
+                .body("[3].id", is(categories.get(3).getId().intValue()))
+                .body("[3].name", is(categories.get(3).getName()));
 
         verify(productCategoryRepository, times(1)).findAllProductCategories();
     }
 
     @Test
     void testGetProductCategoryById() {
-        String responseBody = given()
-                .when().get("/101")
-                .then()
-                .statusCode(200)
-                .body("name", is("Clothing"))
-                .body("id", is(101))
-                .extract().asString();
+        String responseBody = given().when().get("/101").then().statusCode(200)
+                .body("name", is("Clothing")).body("id", is(101)).extract().asString();
 
         assertEquals("{\"id\":101,\"name\":\"Clothing\"}", responseBody);
 
@@ -65,39 +58,29 @@ public class ProductsCategoryResourceIntegrationTest {
 
     @Test
     void testGetProductCategoryByIdShouldReturnNotFound() {
-        given()
-                .when().get("/1000")
-                .then()
-                .statusCode(404)
-                .body(is(""));
+        given().when().get("/1000").then().statusCode(404).body(is(""));
 
         verify(productCategoryRepository, times(1)).findProductCategoryById(1000l);
     }
 
     @Test
     void testGetProductCategoryByIdAsStringShouldReturnError() {
-        given()
-                .when().get("/aaaa")
-                .then()
-                .statusCode(404);
+        given().when().get("/aaaa").then().statusCode(404);
 
         verify(productCategoryRepository, times(0)).findProductCategoryById(any());
     }
 
     @Test
     void testCreateProductCategory() {
-        CreateProductCategoryDTO createProductCategoryDTO = new CreateProductCategoryDTO("New Category");
-        ProductCategory category = given()
-                .header("Content-type", "application/json")
-                .body(createProductCategoryDTO)
-                .when().post("")
-                .then()
-                .statusCode(201)
-                .body("name", is("New Category"))
-                .body("id", is(CoreMatchers.any(Integer.class)))
+        CreateProductCategoryDTO createProductCategoryDTO =
+                new CreateProductCategoryDTO("New Category");
+        ProductCategory category = given().header("Content-type", "application/json")
+                .body(createProductCategoryDTO).when().post("").then().statusCode(201)
+                .body("name", is("New Category")).body("id", is(CoreMatchers.any(Integer.class)))
                 .extract().as(ProductCategory.class);
 
-        var newProductCategory = productCategoryRepository.findProductCategoryById(category.id).get();
+        var newProductCategory =
+                productCategoryRepository.findProductCategoryById(category.id).get();
         assertEquals("New Category", newProductCategory.getName());
 
         verify(productCategoryRepository, times(1)).saveProductCategory(newProductCategory);
@@ -110,17 +93,13 @@ public class ProductsCategoryResourceIntegrationTest {
         newCategory = productCategoryRepository.saveProductCategory(newCategory);
         ProductCategory.flush();
 
-        UpdateProductCategoryDTO updateProductCategoryDTO = new UpdateProductCategoryDTO(newCategory.id,
-                "Updated Category");
-        given()
-                .header("Content-type", "application/json")
-                .body(updateProductCategoryDTO)
-                .when().patch("/" + newCategory.id)
-                .then()
-                .statusCode(202)
-                .body(is(""));
+        UpdateProductCategoryDTO updateProductCategoryDTO =
+                new UpdateProductCategoryDTO(newCategory.id, "Updated Category");
+        given().header("Content-type", "application/json").body(updateProductCategoryDTO).when()
+                .patch("/" + newCategory.id).then().statusCode(202).body(is(""));
 
-        var updatedProductCategory = productCategoryRepository.findProductCategoryById(newCategory.id).get();
+        var updatedProductCategory =
+                productCategoryRepository.findProductCategoryById(newCategory.id).get();
         assertEquals("Updated Category", updatedProductCategory.getName());
 
         verify(productCategoryRepository, times(1)).updateProductCategory(updatedProductCategory);
