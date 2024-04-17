@@ -51,4 +51,31 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .toList();
         return new LinkedHashSet<>(catalog);
     }
+
+    @Override
+    public Set<ProductCategoryDTO> listProductsCatalogByCategory(long categoryId) {
+        Map<String, BigDecimal> prices = productPricingService.listAll().stream()
+                .collect(HashMap::new, (map, p) -> map.put(p.getSku(), p.getPrice()), HashMap::putAll);
+
+        Map<String, Integer> stockUnits = productInventoryService.listAll().stream()
+                .filter(p -> p.getStockUnits() > 0)
+                .collect(HashMap::new, (map, p) -> map.put(p.getSku(), p.getStockUnits()), HashMap::putAll);
+
+        Map<Long, Set<ProductDTO>> categoryProductsMap = productService.listAll().stream()
+                .filter(p -> stockUnits.containsKey(p.getSku()) && stockUnits.get(p.getSku()) > 0
+                        && prices.containsKey(p.getSku()) && p.getCategory().getId() == categoryId)
+                .map(p -> new ProductDTO(p.getId(), p.getSku(), p.getName(), prices.get(p.getSku()), p.getDescription(),
+                        p.getCategory().getId()))
+                .collect(HashMap::new, (map, p) -> {
+                    Set<ProductDTO> products = map.getOrDefault(p.categoryId(), new HashSet<>());
+                    products.add(p);
+                    map.put(p.categoryId(), products);
+                }, HashMap::putAll);
+
+        List<ProductCategoryDTO> catalog = productCategoryService.listAll().stream()
+                .filter(cat -> cat.getId() == categoryId)
+                .map(cat -> new ProductCategoryDTO(cat.getId(), cat.getName(), categoryProductsMap.get(cat.getId())))
+                .toList();
+        return new LinkedHashSet<>(catalog);
+    }
 }

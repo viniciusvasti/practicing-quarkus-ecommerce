@@ -6,4 +6,6 @@ import org.vas.store.presentation.dtos.ProductCategoryDTO;
 
 public interface ApplicationService {
     Set<ProductCategoryDTO> listProductsCatalog();
+
+    Set<ProductCategoryDTO> listProductsCatalogByCategory(long categoryId);
 }
