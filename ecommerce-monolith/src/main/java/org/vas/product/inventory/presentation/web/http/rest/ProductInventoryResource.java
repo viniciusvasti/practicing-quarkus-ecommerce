@@ -1,7 +1,6 @@
 package org.vas.product.inventory.presentation.web.http.rest;
 
 import java.util.Set;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
@@ -14,7 +13,6 @@ import org.vas.product.inventory.core.domain.ProductInventory;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
 import org.vas.product.inventory.presentation.dtos.CreateProductInventoryDTO;
 import org.vas.product.inventory.presentation.dtos.UpdateProductInventoryDTO;
-
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -45,24 +43,18 @@ public class ProductInventoryResource {
     @GET
     @Path("/{id:\\d+}")
     @Operation(summary = "Get product inventory by id")
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Product details"),
-            @APIResponse(responseCode = "404", description = "Product not found")
-    })
+    @APIResponses({@APIResponse(responseCode = "200", description = "Product details"),
+            @APIResponse(responseCode = "404", description = "Product not found")})
     public RestResponse<ProductInventory> getById(@PathParam("id") String id) {
-        return service
-                .findById(Long.parseLong(id))
-                .map(RestResponse::ok)
+        return service.findById(Long.parseLong(id)).map(RestResponse::ok)
                 .orElse(RestResponse.notFound());
     }
 
     @POST
     @Transactional
     @Operation(summary = "Create a new product inventory")
-    @APIResponses({
-            @APIResponse(responseCode = "201", description = "Product created"),
-            @APIResponse(responseCode = "400", description = "Invalid product")
-    })
+    @APIResponses({@APIResponse(responseCode = "201", description = "Product created"),
+            @APIResponse(responseCode = "400", description = "Invalid product")})
     public RestResponse<ProductInventory> create(CreateProductInventoryDTO productDto) {
         // TODO: handle invalid product exception
         var created = service.create(productDto);
@@ -74,11 +66,9 @@ public class ProductInventoryResource {
     @ResponseStatus(StatusCode.ACCEPTED)
     @Transactional
     @Operation(summary = "Update product inventory")
-    @APIResponses({
-            @APIResponse(responseCode = "202", description = "Product updated"),
+    @APIResponses({@APIResponse(responseCode = "202", description = "Product updated"),
             @APIResponse(responseCode = "400", description = "Invalid product"),
-            @APIResponse(responseCode = "404", description = "Product not found")
-    })
+            @APIResponse(responseCode = "404", description = "Product not found")})
     public void update(@PathParam("id") String id, UpdateProductInventoryDTO productDto) {
         // TODO: handle invalid product exception
         service.update(productDto, Long.parseLong(id));

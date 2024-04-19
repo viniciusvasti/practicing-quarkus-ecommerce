@@ -44,24 +44,18 @@ public class ProductPriceResource {
     @GET
     @Path("/{id:\\d+}")
     @Operation(summary = "Get product price by id")
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Product details"),
-            @APIResponse(responseCode = "404", description = "Product not found")
-    })
+    @APIResponses({@APIResponse(responseCode = "200", description = "Product details"),
+            @APIResponse(responseCode = "404", description = "Product not found")})
     public RestResponse<ProductPrice> getById(@PathParam("id") String id) {
-        return service
-                .findById(Long.parseLong(id))
-                .map(RestResponse::ok)
+        return service.findById(Long.parseLong(id)).map(RestResponse::ok)
                 .orElse(RestResponse.notFound());
     }
 
     @POST
     @Transactional
     @Operation(summary = "Create a new price for a product")
-    @APIResponses({
-            @APIResponse(responseCode = "201", description = "Product created"),
-            @APIResponse(responseCode = "400", description = "Invalid product")
-    })
+    @APIResponses({@APIResponse(responseCode = "201", description = "Product created"),
+            @APIResponse(responseCode = "400", description = "Invalid product")})
     public RestResponse<ProductPrice> create(CreateProductPriceDTO productDto) {
         // TODO: handle invalid product exception
         var created = service.create(productDto);
@@ -69,19 +63,18 @@ public class ProductPriceResource {
     }
 
     @PATCH
-    // Invalidate the cache because the product price has changed, and it's critical to show the updated price
+    // Invalidate the cache because the product price has changed, and it's critical to show the
+    // updated price
     @CacheInvalidateAll(cacheName = "store-products-catalog")
     @Path("/{id:\\d+}")
     @ResponseStatus(StatusCode.ACCEPTED)
     @Transactional
     @Operation(summary = "Update product price")
-    @APIResponses({
-            @APIResponse(responseCode = "202", description = "Product updated"),
+    @APIResponses({@APIResponse(responseCode = "202", description = "Product updated"),
             @APIResponse(responseCode = "400", description = "Invalid product"),
-            @APIResponse(responseCode = "404", description = "Product not found")
-    })
-    public void update(@PathParam("id") String id, UpdateProductPriceDTO producDto) {
+            @APIResponse(responseCode = "404", description = "Product not found")})
+    public void update(@PathParam("id") String id, UpdateProductPriceDTO productDto) {
         // TODO: handle invalid product exception
-        service.update(producDto, Long.parseLong(id));
+        service.update(productDto, Long.parseLong(id));
     }
 }

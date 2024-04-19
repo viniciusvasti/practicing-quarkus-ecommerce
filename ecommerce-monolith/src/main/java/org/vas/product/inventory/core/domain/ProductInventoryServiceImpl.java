@@ -12,6 +12,7 @@ import org.vas.product.inventory.core.adapters.ProductInventoryRepository;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
 import org.vas.product.inventory.presentation.dtos.CreateProductInventoryDTO;
 import org.vas.product.inventory.presentation.dtos.UpdateProductInventoryDTO;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -22,27 +23,33 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
     private ProductInventoryRepository productRepository;
 
     public Optional<ProductInventory> findById(Long id) {
+        Log.tracef("Getting product inventory by id: %s", id);
         return productRepository.findProductById(id);
     }
 
     public Set<ProductInventory> listAll() {
+        Log.trace("Listing all products inventory");
         return productRepository.findAllProducts();
     }
 
     public ProductInventory create(CreateProductInventoryDTO productDto) {
+        Log.debugf("Creating new product: %s", productDto);
         var product = new ProductInventory(productDto.sku(), productDto.stockUnits());
         if (!product.isValid()) {
+            Log.warnf("Attempt to create invalid product: %s", product);
             throw new IllegalArgumentException("Invalid product ");
         }
         return productRepository.saveProduct(product);
     }
 
     public void update(UpdateProductInventoryDTO productDto, Long id) {
+        Log.debugf("Updating product: %s, %s", id, productDto);
         var product = new ProductInventory(id, null, productDto.stockUnits());
         var existingProduct = productRepository.findProductById(product.id).orElseThrow(
                 () -> new IllegalArgumentException("Product with id " + product.id + " not found"));
         product.setSku(existingProduct.getSku());
         if (!product.isValid()) {
+            Log.warnf("Attempt to update product with invalid data: %s", product);
             throw new IllegalArgumentException("Invalid product ");
         }
         productRepository.updateProduct(product);
@@ -61,6 +68,7 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
         for (ProductInventory inventory : inventories) {
             int orderedQuantity = skusQuantity.get(inventory.getSku());
             if (inventory.getStockUnits() < orderedQuantity) {
+                Log.warnf("Not enough stock units for product: %s", inventory.getSku());
                 throw new NotEnoughStockUnitsException(inventory.getSku());
             }
             inventory.decreaseStockUnits(orderedQuantity);

@@ -45,9 +45,7 @@ public class ProductDetailsResource {
     @APIResponse(responseCode = "200", description = "Product details")
     @APIResponse(responseCode = "404", description = "Product not found")
     public RestResponse<ProductDetails> getById(@PathParam("id") String id) {
-        return service
-                .findById(Long.parseLong(id))
-                .map(RestResponse::ok)
+        return service.findById(Long.parseLong(id)).map(RestResponse::ok)
                 .orElse(RestResponse.notFound());
     }
 

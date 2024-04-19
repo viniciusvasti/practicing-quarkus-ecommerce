@@ -1,7 +1,6 @@
 package org.vas.product.details.presentation.web.http.rest;
 
 import java.util.Set;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
@@ -44,24 +43,18 @@ public class ProductsCategoryResource {
     @GET
     @Path("/{id:\\d+}")
     @Operation(summary = "Get product category details by id")
-    @APIResponses({
-        @APIResponse(responseCode = "200", description = "Product category details"),
-        @APIResponse(responseCode = "404", description = "Product category not found")
-    })
+    @APIResponses({@APIResponse(responseCode = "200", description = "Product category details"),
+            @APIResponse(responseCode = "404", description = "Product category not found")})
     public RestResponse<ProductCategory> getById(@PathParam("id") String id) {
-        return service
-            .findById(Long.parseLong(id))
-            .map(RestResponse::ok)
-            .orElse(RestResponse.notFound());
+        return service.findById(Long.parseLong(id)).map(RestResponse::ok)
+                .orElse(RestResponse.notFound());
     }
 
     @POST
     @Transactional
     @Operation(summary = "Create a new product category")
-    @APIResponses({
-        @APIResponse(responseCode = "201", description = "Product category created"),
-        @APIResponse(responseCode = "400", description = "Invalid product category")
-    })
+    @APIResponses({@APIResponse(responseCode = "201", description = "Product category created"),
+            @APIResponse(responseCode = "400", description = "Invalid product category")})
     public RestResponse<ProductCategory> create(CreateProductCategoryDTO productCategory) {
         // TODO: handle invalid product category exception
         var created = service.create(productCategory.name());
@@ -73,10 +66,8 @@ public class ProductsCategoryResource {
     @ResponseStatus(StatusCode.ACCEPTED)
     @Transactional
     @Operation(summary = "Update product category details")
-    @APIResponses({
-        @APIResponse(responseCode = "202", description = "Product category updated"),
-        @APIResponse(responseCode = "400", description = "Invalid product category")
-    })
+    @APIResponses({@APIResponse(responseCode = "202", description = "Product category updated"),
+            @APIResponse(responseCode = "400", description = "Invalid product category")})
     public void update(@PathParam("id") String id, UpdateProductCategoryDTO productCategory) {
         // TODO: handle invalid product category exception
         service.update(productCategory, Long.parseLong(id));

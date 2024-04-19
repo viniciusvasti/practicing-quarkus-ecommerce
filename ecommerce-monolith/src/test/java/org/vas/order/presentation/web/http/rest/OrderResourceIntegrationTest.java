@@ -27,8 +27,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
 
 @QuarkusTest
-@TestHTTPEndpoint(OrderController.class)
-public class OrderControllerIntegrationTest {
+@TestHTTPEndpoint(OrderResource.class)
+public class OrderResourceIntegrationTest {
     @InjectSpy
     private OrderRepository orderRepository;
     @InjectSpy

@@ -1,7 +1,6 @@
 package org.vas.store.presentation.web.http.rest;
 
 import java.util.Set;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;

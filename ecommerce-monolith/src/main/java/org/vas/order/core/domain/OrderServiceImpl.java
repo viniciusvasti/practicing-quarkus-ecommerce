@@ -15,7 +15,7 @@ import org.vas.order.presentation.dtos.CreateOrderDTO;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
 import org.vas.product.pricing.core.domain.ProductPrice;
 import org.vas.product.pricing.core.ports.ProductPriceService;
-
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -40,9 +40,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public Order create(CreateOrderDTO orderDto) {
+        Log.tracef("Creating a new order: %s", orderDto);
         Order order = mapToOrder(orderDto);
         order.setStatus(OrderStatus.PENDING);
         if (!order.isValid()) {
+            Log.warnf("Attempt to create invalid order: %s", order);
             throw new IllegalArgumentException("Invalid order");
         }
         inventoryService.decreaseOrderStockUnits(order);
@@ -56,8 +58,7 @@ public class OrderServiceImpl implements OrderService {
     private Order mapToOrder(CreateOrderDTO orderDto) {
         List<OrderedProduct> items = orderDto.items().stream()
                 .map(item -> new OrderedProduct(item.sku(), item.quantity())).toList();
-        Order order = new Order(items, orderDto.paymentAmount());
-        return order;
+        return new Order(items, orderDto.paymentAmount());
     }
 
     /**
@@ -75,6 +76,11 @@ public class OrderServiceImpl implements OrderService {
                 .map(item -> prices.get(item.getSku()).getPrice()
                         .multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return total.compareTo(order.getPaymentAmount()) == 0;
+        boolean itMatches = total.compareTo(order.getPaymentAmount()) == 0;
+        if (!itMatches) {
+            Log.warnf("Payment amount does not match the total amount of the order: %s, %s", order,
+                    total);
+        }
+        return itMatches;
     }
 }
