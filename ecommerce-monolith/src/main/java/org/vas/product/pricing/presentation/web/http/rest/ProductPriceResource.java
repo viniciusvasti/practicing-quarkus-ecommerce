@@ -1,7 +1,6 @@
 package org.vas.product.pricing.presentation.web.http.rest;
 
 import java.util.Set;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
@@ -14,7 +13,7 @@ import org.vas.product.pricing.core.domain.ProductPrice;
 import org.vas.product.pricing.core.ports.ProductPriceService;
 import org.vas.product.pricing.presentation.dtos.CreateProductPriceDTO;
 import org.vas.product.pricing.presentation.dtos.UpdateProductPriceDTO;
-
+import io.quarkus.cache.CacheInvalidateAll;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -70,6 +69,8 @@ public class ProductPriceResource {
     }
 
     @PATCH
+    // Invalidate the cache because the product price has changed, and it's critical to show the updated price
+    @CacheInvalidateAll(cacheName = "store-products-catalog")
     @Path("/{id:\\d+}")
     @ResponseStatus(StatusCode.ACCEPTED)
     @Transactional

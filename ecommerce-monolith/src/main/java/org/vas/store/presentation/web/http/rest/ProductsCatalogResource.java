@@ -7,6 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.vas.store.application.ApplicationService;
 import org.vas.store.presentation.dtos.ProductCategoryDTO;
+import io.quarkus.cache.CacheResult;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -26,6 +27,9 @@ public class ProductsCatalogResource {
     private ApplicationService appService;
 
     @GET
+    // Cached because the products catalog is not expected to change frequently and we expect a lot
+    // of requests to this endpoint
+    @CacheResult(cacheName = "store-products-catalog")
     @Operation(
             summary = "List all products organized by category to be listed in the store products page")
     @APIResponse(responseCode = "200", description = "List of all products organized by category")
@@ -35,6 +39,9 @@ public class ProductsCatalogResource {
 
     @GET
     @Path("/category/{id:\\d+}")
+    // Cached because the products catalog is not expected to change frequently and we expect a lot
+    // of requests to this endpoint
+    @CacheResult(cacheName = "store-products-catalog-category")
     @Operation(summary = "List all products by category to be listed in the store products page")
     @APIResponse(responseCode = "200", description = "List of all products by category")
     public Set<ProductCategoryDTO> getByCategoryId(@PathParam("id") String categoryId) {
