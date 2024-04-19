@@ -40,10 +40,8 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 
     public void update(UpdateProductPriceDTO productDto, Long id) {
         Log.debugf("Updating product price: %s, %s", id, productDto);
-        ProductPrice product = new ProductPrice(id, null, productDto.price());
-        var existingProduct = productRepository.findProductById(product.id).orElseThrow(
-                () -> new IllegalArgumentException("Product with id " + product.id + " not found"));
-        product.setSku(existingProduct.getSku());
+        ProductPrice existingProduct = getExistingProduct(id);
+        ProductPrice product = new ProductPrice(id, existingProduct.getSku(), productDto.price());
         if (!product.isValid()) {
             Log.warnf("Attempt to update product with invalid data: %s", product);
             throw new IllegalArgumentException("Invalid product");
@@ -55,5 +53,11 @@ public class ProductPriceServiceImpl implements ProductPriceService {
     public List<ProductPrice> findBySkus(List<String> skus) {
         Log.tracef("Getting product prices by skus: %s", skus);
         return productRepository.findBySkus(skus);
+    }
+
+    private ProductPrice getExistingProduct(Long id) {
+        var existingProduct = productRepository.findProductById(id).orElseThrow(
+                () -> new IllegalArgumentException("Product with id " + id + " not found"));
+        return existingProduct;
     }
 }

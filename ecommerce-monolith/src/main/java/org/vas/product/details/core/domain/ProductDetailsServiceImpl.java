@@ -39,15 +39,19 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
     public void update(UpdateProductDetailsDTO productDto, Long id) {
         Log.debugf("Updating product details: %s, %s", id, productDto);
-        ProductDetails product = new ProductDetails(id, "", productDto.name(),
+        ProductDetails existingProduct = getExistingProduct(id);
+        ProductDetails product = new ProductDetails(id, existingProduct.getSku(), productDto.name(),
                 productDto.description(), new ProductCategory(productDto.categoryId(), ""));
-        var existingProduct = productRepository.findProductById(product.id).orElseThrow(
-                () -> new IllegalArgumentException("Product with id " + product.id + " not found"));
-        product.setSku(existingProduct.getSku());
         if (!product.isValid()) {
             Log.warnf("Attempt to update product with invalid data: %s", product);
             throw new IllegalArgumentException("Invalid product ");
         }
         productRepository.updateProduct(product);
+    }
+
+    private ProductDetails getExistingProduct(Long id) {
+        ProductDetails existingProduct = productRepository.findProductById(id).orElseThrow(
+                () -> new IllegalArgumentException("Product with id " + id + " not found"));
+        return existingProduct;
     }
 }

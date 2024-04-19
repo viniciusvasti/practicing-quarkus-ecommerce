@@ -44,10 +44,8 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 
     public void update(UpdateProductInventoryDTO productDto, Long id) {
         Log.debugf("Updating product: %s, %s", id, productDto);
-        var product = new ProductInventory(id, null, productDto.stockUnits());
-        var existingProduct = productRepository.findProductById(product.id).orElseThrow(
-                () -> new IllegalArgumentException("Product with id " + product.id + " not found"));
-        product.setSku(existingProduct.getSku());
+        ProductInventory existingProduct = getExistingProduct(id);
+        var product = new ProductInventory(id, existingProduct.getSku(), productDto.stockUnits());
         if (!product.isValid()) {
             Log.warnf("Attempt to update product with invalid data: %s", product);
             throw new IllegalArgumentException("Invalid product ");
@@ -74,5 +72,11 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
             inventory.decreaseStockUnits(orderedQuantity);
             productRepository.updateProduct(inventory);
         }
+    }
+
+    private ProductInventory getExistingProduct(Long id) {
+        ProductInventory existingProduct = productRepository.findProductById(id).orElseThrow(
+                () -> new IllegalArgumentException("Product with id " + id + " not found"));
+        return existingProduct;
     }
 }
