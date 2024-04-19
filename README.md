@@ -13,7 +13,7 @@
 - [x] Database Migrations (Flyway)
 - [ ] GraphQL API
 - [x] Health Check (SmallRye / MicroProfile)
-- [ ] Caching
+- [x] Caching
 - [ ] Microservices
 - [ ] API Gateway
 - [ ] Synchronous Communication
