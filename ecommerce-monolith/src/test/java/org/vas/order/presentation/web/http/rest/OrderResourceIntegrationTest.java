@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.vas.notification.core.ports.NotificationService;
 import org.vas.order.core.adapters.OrderRepository;
 import org.vas.order.core.domain.Order;
 import org.vas.order.core.domain.OrderStatus;
@@ -25,6 +26,7 @@ import org.vas.product.inventory.core.ports.ProductInventoryService;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
+import jakarta.inject.Inject;
 
 @QuarkusTest
 @TestHTTPEndpoint(OrderResource.class)
@@ -39,6 +41,8 @@ public class OrderResourceIntegrationTest {
     private PaymentService paymentService;
     @InjectSpy
     private PaymentRepository paymentRepository;
+    @InjectSpy
+    private NotificationService notificationService;
 
     @Test
     void testSubmitCorrectOrder() {
@@ -63,6 +67,7 @@ public class OrderResourceIntegrationTest {
         verify(productRepository, times(3)).updateProduct(any(ProductInventory.class));
         verify(paymentService, times(1)).chargeOrder(any(Order.class));
         verify(paymentRepository, times(1)).savePayment(any(Payment.class));
+        verify(notificationService, times(2)).notifyByEmail(any(String.class));
     }
 
     @Test
