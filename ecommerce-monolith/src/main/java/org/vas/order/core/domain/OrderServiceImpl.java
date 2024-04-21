@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import org.vas.order.core.adapters.OrderRepository;
 import org.vas.order.core.domain.exceptions.WrongPaymentAmountException;
 import org.vas.order.core.ports.OrderService;
@@ -16,6 +15,7 @@ import org.vas.payment.core.ports.PaymentService;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
 import org.vas.product.pricing.core.domain.ProductPrice;
 import org.vas.product.pricing.core.ports.ProductPriceService;
+import org.vas.shipping.core.ports.ShippingService;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -32,6 +32,8 @@ public class OrderServiceImpl implements OrderService {
     private ProductPriceService priceService;
     @Inject
     private PaymentService paymentService;
+    @Inject
+    private ShippingService shippingService;
 
     public Optional<Order> findById(Long id) {
         return orderRepository.findOrderById(id);
@@ -46,7 +48,10 @@ public class OrderServiceImpl implements OrderService {
         Order order = mapToOrder(orderDto);
         Order createdOrder = create(order);
 
-        paymentService.chargeOrder(createdOrder);
+        boolean paymentSucceeded = paymentService.chargeOrder(createdOrder);
+        if (paymentSucceeded) {
+            shippingService.shipOrder(createdOrder);
+        }
         return createdOrder;
     }
 

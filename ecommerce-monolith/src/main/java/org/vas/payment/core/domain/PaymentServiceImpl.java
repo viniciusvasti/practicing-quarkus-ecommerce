@@ -24,16 +24,17 @@ public class PaymentServiceImpl implements PaymentService {
 
     // TODO: return a boolean to indicate if the payment was successful
     @Transactional
-    public void chargeOrder(Order order) {
+    public boolean chargeOrder(Order order) {
         Payment payment = new Payment(order.getPaymentAmount(), order);
         Log.debugf("Charging payment: %s", payment);
         var response = paymentGatewayService.charge(payment);
         if (!response.get("status").equals("201")) {
             Log.errorf("Payment failed: %s", response);
             orderRepository.updateOrderStatus(order.getId(), OrderStatus.PAYMENT_FAILED);
-            return;
+            return false;
         }
         paymentRepository.savePayment(payment);
         orderRepository.updateOrderStatus(order.getId(), OrderStatus.PAID);
+        return true;
     }
 }

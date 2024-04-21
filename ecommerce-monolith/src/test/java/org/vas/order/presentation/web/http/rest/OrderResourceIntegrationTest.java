@@ -55,8 +55,7 @@ public class OrderResourceIntegrationTest {
         assertTrue(opCreatedOrder.isPresent());
         assertTrue(opCreatedOrder.isPresent());
         Order createdOrder = opCreatedOrder.get();
-        // TODO: change to OrderStatus.SHIPPED after implementing the logic
-        assertEquals(OrderStatus.PAID, createdOrder.getStatus());
+        assertEquals(OrderStatus.SHIPPED, createdOrder.getStatus());
         assertEquals(3, createdOrder.getItems().size());
 
         verify(orderRepository, times(1)).saveOrder(any(Order.class));
