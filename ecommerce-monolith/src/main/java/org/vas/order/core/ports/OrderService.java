@@ -9,5 +9,5 @@ import org.vas.order.presentation.dtos.CreateOrderDTO;
 public interface OrderService {
     Optional<Order> findById(Long id);
     Set<Order> listAll();
-    Order create(CreateOrderDTO orderDto);
+    Order requestOrder(CreateOrderDTO orderDto);
 }

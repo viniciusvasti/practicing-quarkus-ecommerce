@@ -14,7 +14,6 @@ import org.vas.order.core.ports.OrderService;
 import org.vas.order.presentation.dtos.CreateOrderDTO;
 import org.vas.shared.presentation.dtos.ErrorResponseDTO;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -41,12 +40,11 @@ public class OrderResource {
     private OrderService service;
 
     @POST
-    @Transactional
     @Operation(summary = "Create a new order")
     @APIResponses(value = {@APIResponse(responseCode = "201", description = "Order created"),
             @APIResponse(responseCode = "400", description = "Invalid order data")})
     public RestResponse<Order> post(CreateOrderDTO orderDto) {
-        var created = service.create(orderDto);
+        var created = service.requestOrder(orderDto);
         return RestResponse.status(Status.CREATED, created);
     }
 }

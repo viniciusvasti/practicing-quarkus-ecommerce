@@ -12,6 +12,7 @@ import org.vas.order.core.adapters.OrderRepository;
 import org.vas.order.core.domain.exceptions.WrongPaymentAmountException;
 import org.vas.order.core.ports.OrderService;
 import org.vas.order.presentation.dtos.CreateOrderDTO;
+import org.vas.payment.core.ports.PaymentService;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
 import org.vas.product.pricing.core.domain.ProductPrice;
 import org.vas.product.pricing.core.ports.ProductPriceService;
@@ -29,6 +30,8 @@ public class OrderServiceImpl implements OrderService {
     private ProductInventoryService inventoryService;
     @Inject
     private ProductPriceService priceService;
+    @Inject
+    private PaymentService paymentService;
 
     public Optional<Order> findById(Long id) {
         return orderRepository.findOrderById(id);
@@ -38,20 +41,29 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAllOrders();
     }
 
-    @Transactional
-    public Order create(CreateOrderDTO orderDto) {
+    public Order requestOrder(CreateOrderDTO orderDto) {
         Log.tracef("Creating a new order: %s", orderDto);
         Order order = mapToOrder(orderDto);
+        Order createdOrder = create(order);
+
+        paymentService.chargeOrder(createdOrder);
+        return createdOrder;
+    }
+
+    @Transactional
+    public Order create(Order order) {
         order.setStatus(OrderStatus.PENDING);
         if (!order.isValid()) {
             Log.warnf("Attempt to create invalid order: %s", order);
             throw new IllegalArgumentException("Invalid order");
         }
-        inventoryService.decreaseOrderStockUnits(order);
         if (!orderPaymentAmountMatches(order)) {
             throw new WrongPaymentAmountException();
         }
+
+        inventoryService.decreaseOrderStockUnits(order);
         order.setStatus(OrderStatus.CONFIRMED);
+
         return orderRepository.saveOrder(order);
     }
 

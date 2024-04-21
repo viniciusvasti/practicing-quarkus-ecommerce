@@ -62,4 +62,9 @@ public class Order extends PanacheEntity {
     public boolean isValid() {
         return status != null;
     }
+
+    @Override
+    public String toString() {
+        return "Order [id=" + id + ", status=" + status + ", paymentAmount=" + paymentAmount + ", items=" + items + "]";
+    }
 }
