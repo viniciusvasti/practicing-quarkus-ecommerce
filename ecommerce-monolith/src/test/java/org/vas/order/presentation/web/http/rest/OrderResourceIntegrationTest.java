@@ -26,7 +26,6 @@ import org.vas.product.inventory.core.ports.ProductInventoryService;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
-import jakarta.inject.Inject;
 
 @QuarkusTest
 @TestHTTPEndpoint(OrderResource.class)
@@ -68,6 +67,9 @@ public class OrderResourceIntegrationTest {
         verify(paymentService, times(1)).chargeOrder(any(Order.class));
         verify(paymentRepository, times(1)).savePayment(any(Payment.class));
         verify(notificationService, times(2)).notifyByEmail(any(String.class));
+
+        Payment payment = Payment.find("order.id", createdOrder.id).firstResult();
+        assertEquals(BigDecimal.valueOf(1539.94), payment.getAmount());
     }
 
     @Test

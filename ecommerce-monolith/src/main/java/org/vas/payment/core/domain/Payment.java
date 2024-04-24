@@ -23,6 +23,10 @@ public class Payment extends PanacheEntity {
         this.order = order;
     }
 
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
     public boolean isValid() {
         return amount != null && amount.compareTo(BigDecimal.ZERO) > 0;
     }
