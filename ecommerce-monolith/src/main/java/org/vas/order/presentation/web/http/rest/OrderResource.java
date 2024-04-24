@@ -15,6 +15,7 @@ import org.vas.order.presentation.dtos.CreateOrderDTO;
 import org.vas.shared.presentation.dtos.ErrorResponseDTO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -38,6 +39,23 @@ public class OrderResource {
 
     @Inject
     private OrderService service;
+
+    @GET
+    @Operation(summary = "List all orders")
+    @APIResponse(responseCode = "200", description = "List of all orders")
+    public RestResponse<Iterable<Order>> getAll() {
+        return RestResponse.ok(service.listAll());
+    }
+
+    @GET
+    @Path("/{id:\\d+}")
+    @Operation(summary = "Get order by id")
+    @APIResponses(value = {@APIResponse(responseCode = "200", description = "Order found"),
+            @APIResponse(responseCode = "404", description = "Order not found")})
+    public RestResponse<Order> get(String id) {
+        return service.findById(Long.parseLong(id)).map(RestResponse::ok)
+                .orElse(RestResponse.notFound());
+    }
 
     @POST
     @Operation(summary = "Create a new order")
