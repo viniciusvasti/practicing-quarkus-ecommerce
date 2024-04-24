@@ -52,7 +52,9 @@ public class OrderServiceImpl implements OrderService {
         if (paymentSucceeded) {
             shippingService.shipOrder(createdOrder);
         }
-        return createdOrder;
+        // Had to get it from the database to get the updated status that might change during the
+        // payment and shipping process
+        return Order.findById(createdOrder.getId());
     }
 
     @Transactional
