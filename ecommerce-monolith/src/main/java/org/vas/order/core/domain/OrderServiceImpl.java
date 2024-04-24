@@ -11,12 +11,13 @@ import org.vas.order.core.adapters.OrderRepository;
 import org.vas.order.core.domain.exceptions.WrongPaymentAmountException;
 import org.vas.order.core.ports.OrderService;
 import org.vas.order.presentation.dtos.CreateOrderDTO;
-import org.vas.payment.core.ports.PaymentService;
 import org.vas.product.inventory.core.ports.ProductInventoryService;
 import org.vas.product.pricing.core.domain.ProductPrice;
 import org.vas.product.pricing.core.ports.ProductPriceService;
-import org.vas.shipping.core.ports.ShippingService;
 import io.quarkus.logging.Log;
+import io.quarkus.vertx.ConsumeEvent;
+import io.smallrye.common.annotation.Blocking;
+import io.vertx.core.eventbus.EventBus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -31,9 +32,7 @@ public class OrderServiceImpl implements OrderService {
     @Inject
     private ProductPriceService priceService;
     @Inject
-    private PaymentService paymentService;
-    @Inject
-    private ShippingService shippingService;
+    private EventBus eventBus;
 
     public Optional<Order> findById(Long id) {
         return orderRepository.findOrderById(id);
@@ -48,13 +47,8 @@ public class OrderServiceImpl implements OrderService {
         Order order = mapToOrder(orderDto);
         Order createdOrder = create(order);
 
-        boolean paymentSucceeded = paymentService.chargeOrder(createdOrder);
-        if (paymentSucceeded) {
-            shippingService.shipOrder(createdOrder);
-        }
-        // Had to get it from the database to get the updated status that might change during the
-        // payment and shipping process
-        return Order.findById(createdOrder.getId());
+        eventBus.publish("order.created", createdOrder.id);
+        return createdOrder;
     }
 
     @Transactional
@@ -101,5 +95,37 @@ public class OrderServiceImpl implements OrderService {
                     total);
         }
         return itMatches;
+    }
+
+    @ConsumeEvent("order.payment.succeeded")
+    @Blocking
+    @Transactional
+    public void onOrderPaymentSucceeded(Long orderId) {
+        Log.infof("Listening to order payment succeeded: %s", orderId);
+        orderRepository.updateOrderStatus(orderId, OrderStatus.PAID);
+    }
+
+    @ConsumeEvent("order.payment.failed")
+    @Blocking
+    @Transactional
+    public void onOrderPaymentFailed(Long orderId) {
+        Log.infof("Listening to order payment failed: %s", orderId);
+        orderRepository.updateOrderStatus(orderId, OrderStatus.PAYMENT_FAILED);
+    }
+
+    @ConsumeEvent("order.shipping.succeeded")
+    @Blocking
+    @Transactional
+    public void onOrderShippingRequestSucceeded(Long orderId) {
+        Log.infof("Listening to order shipping succeeded: %s", orderId);
+        orderRepository.updateOrderStatus(orderId, OrderStatus.SHIPPED);
+    }
+
+    @ConsumeEvent("order.shipping.failed")
+    @Blocking
+    @Transactional
+    public void onOrderShippingRequestFailed(Long orderId) {
+        Log.infof("Listening to order shipping failed: %s", orderId);
+        orderRepository.updateOrderStatus(orderId, OrderStatus.SHIPPING_FAILED);
     }
 }
