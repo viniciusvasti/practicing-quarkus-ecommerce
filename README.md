@@ -14,6 +14,7 @@
 - [ ] GraphQL API
 - [x] Health Check (SmallRye / MicroProfile)
 - [x] Caching
+- [x] Application Event Bus
 - [ ] Distributed Logging
 - [ ] Microservices
 - [ ] API Gateway
