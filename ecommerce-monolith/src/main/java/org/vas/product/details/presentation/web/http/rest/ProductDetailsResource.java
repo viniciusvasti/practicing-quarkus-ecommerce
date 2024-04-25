@@ -14,8 +14,10 @@ import org.vas.product.details.presentation.dtos.CreateProductDetailsDTO;
 import org.vas.product.details.presentation.dtos.UpdateProductDetailsDTO;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -46,7 +48,7 @@ public class ProductDetailsResource {
     @APIResponse(responseCode = "404", description = "Product not found")
     public RestResponse<ProductDetails> getById(@PathParam("id") String id) {
         return service.findById(Long.parseLong(id)).map(RestResponse::ok)
-                .orElse(RestResponse.notFound());
+                .orElseThrow(() -> new NotFoundException("Product details not found"));
     }
 
     @POST
@@ -55,6 +57,9 @@ public class ProductDetailsResource {
     @APIResponse(responseCode = "201", description = "Product created")
     @APIResponse(responseCode = "400", description = "Invalid product")
     public RestResponse<ProductDetails> create(CreateProductDetailsDTO productDto) {
+        if (productDto == null) {
+            throw new BadRequestException("No product data provided");
+        }
         // TODO: handle invalid product exception
         var created = service.create(productDto);
         return RestResponse.status(Status.CREATED, created);
@@ -68,8 +73,11 @@ public class ProductDetailsResource {
     @APIResponse(responseCode = "202", description = "Product updated")
     @APIResponse(responseCode = "400", description = "Invalid product")
     @APIResponse(responseCode = "404", description = "Product not found")
-    public void update(@PathParam("id") String id, UpdateProductDetailsDTO product) {
+    public void update(@PathParam("id") String id, UpdateProductDetailsDTO productDto) {
+        if (productDto == null) {
+            throw new BadRequestException("No product data provided");
+        }
         // TODO: handle invalid product exception
-        service.update(product, Long.parseLong(id));
+        service.update(productDto, Long.parseLong(id));
     }
 }

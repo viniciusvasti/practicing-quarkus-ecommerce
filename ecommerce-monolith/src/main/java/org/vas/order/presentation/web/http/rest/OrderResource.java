@@ -14,8 +14,10 @@ import org.vas.order.core.ports.OrderService;
 import org.vas.order.presentation.dtos.CreateOrderDTO;
 import org.vas.shared.presentation.dtos.ErrorResponseDTO;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -54,7 +56,7 @@ public class OrderResource {
             @APIResponse(responseCode = "404", description = "Order not found")})
     public RestResponse<Order> get(String id) {
         return service.findById(Long.parseLong(id)).map(RestResponse::ok)
-                .orElse(RestResponse.notFound());
+                .orElseThrow(() -> new NotFoundException("Order not found"));
     }
 
     @POST
@@ -62,6 +64,9 @@ public class OrderResource {
     @APIResponses(value = {@APIResponse(responseCode = "201", description = "Order created"),
             @APIResponse(responseCode = "400", description = "Invalid order data")})
     public RestResponse<Order> post(CreateOrderDTO orderDto) {
+        if (orderDto == null) {
+            throw new BadRequestException("No order data provided");
+        }
         var created = service.requestOrder(orderDto);
         return RestResponse.status(Status.CREATED, created);
     }

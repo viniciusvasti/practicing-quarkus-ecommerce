@@ -15,8 +15,10 @@ import org.vas.product.details.presentation.dtos.CreateProductCategoryDTO;
 import org.vas.product.details.presentation.dtos.UpdateProductCategoryDTO;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -47,7 +49,7 @@ public class ProductsCategoryResource {
             @APIResponse(responseCode = "404", description = "Product category not found")})
     public RestResponse<ProductCategory> getById(@PathParam("id") String id) {
         return service.findById(Long.parseLong(id)).map(RestResponse::ok)
-                .orElse(RestResponse.notFound());
+                .orElseThrow(() -> new NotFoundException("Category not found"));
     }
 
     @POST
@@ -56,6 +58,9 @@ public class ProductsCategoryResource {
     @APIResponses({@APIResponse(responseCode = "201", description = "Product category created"),
             @APIResponse(responseCode = "400", description = "Invalid product category")})
     public RestResponse<ProductCategory> create(CreateProductCategoryDTO productCategory) {
+        if (productCategory == null) {
+            throw new BadRequestException("No category data provided");
+        }
         // TODO: handle invalid product category exception
         var created = service.create(productCategory.name());
         return RestResponse.status(Status.CREATED, created);
@@ -69,6 +74,9 @@ public class ProductsCategoryResource {
     @APIResponses({@APIResponse(responseCode = "202", description = "Product category updated"),
             @APIResponse(responseCode = "400", description = "Invalid product category")})
     public void update(@PathParam("id") String id, UpdateProductCategoryDTO productCategory) {
+        if (productCategory == null) {
+            throw new BadRequestException("No category data provided");
+        }
         // TODO: handle invalid product category exception
         service.update(productCategory, Long.parseLong(id));
     }

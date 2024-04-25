@@ -61,10 +61,8 @@ public class ProductDetailsResourceIntegrationTest {
             assertEquals(products.get(index).getId(), p.getId());
             assertEquals(products.get(index).getSku(), p.getSku());
             assertEquals(products.get(index).getDescription(), p.getDescription());
-            assertEquals(products.get(index).getCategory().getId(),
-                    p.getCategory().getId());
-            assertEquals(products.get(index).getCategory().getName(),
-                    p.getCategory().getName());
+            assertEquals(products.get(index).getCategory().getId(), p.getCategory().getId());
+            assertEquals(products.get(index).getCategory().getName(), p.getCategory().getName());
         });
 
         verify(productRepository, times(1)).findAllProducts();
@@ -87,7 +85,8 @@ public class ProductDetailsResourceIntegrationTest {
 
     @Test
     void testGetProductByIdShouldReturnNotFound() {
-        given().when().get("/453453").then().statusCode(404).body(is(""));
+        given().when().get("/453453").then().statusCode(404).body("message",
+                is("Product details not found"));
 
         verify(productRepository, times(1)).findProductById(453453l);
     }
@@ -132,5 +131,21 @@ public class ProductDetailsResourceIntegrationTest {
                 .patch("/" + productToBeUpdated.getId()).then().statusCode(202).body(is(""));
 
         verify(productRepository, times(1)).updateProduct(any(ProductDetails.class));
+    }
+
+    @Test
+    void testPostWithEmptyBody() {
+        given().header("Content-type", "application/json").body("").when().post("").then()
+                .statusCode(400).body("message", is("No product data provided"));
+
+        verify(productRepository, times(0)).saveProduct(any(ProductDetails.class));
+    }
+
+    @Test
+    void testPatchWithEmptyBody() {
+        given().header("Content-type", "application/json").body("").when().patch("/456").then()
+                .statusCode(400).body("message", is("No product data provided"));
+
+        verify(productRepository, times(0)).updateProduct(any(ProductDetails.class));
     }
 }
