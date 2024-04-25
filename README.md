@@ -27,8 +27,8 @@
 - [ ] Event Sourcing
 
 - [x] Unit Tests (JUnit)
-- [x] Integration Tests (JUnit)
-- [ ] End-to-End Tests
+- [x] Integration Tests (JUnit + Rest Assured)
+- [x] End-to-End Tests (Karate)
 - [x] Mocks (Mockito)
 - [x] Stubs (Mockito)
 - [x] Spies (Mockito)
