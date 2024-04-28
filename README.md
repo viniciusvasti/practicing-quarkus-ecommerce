@@ -7,6 +7,7 @@
 
 - [x] Monolith
 - [x] REST API (JAX-RS)
+- [x] RESTFull API Maturity Level 3
 - [x] API Specification (OpenAPI + Swagger)
 - [x] SQL Database (Postgres)
 - [ ] NoSQL
@@ -18,7 +19,7 @@
 - [ ] Distributed Logging
 - [ ] Microservices
 - [ ] API Gateway
-- [ ] Synchronous Communication
+- [x] Synchronous Communication
 - [ ] Asynchronous Communication
 - [ ] Event-Driven
 - [ ] Microservices Orchestration
