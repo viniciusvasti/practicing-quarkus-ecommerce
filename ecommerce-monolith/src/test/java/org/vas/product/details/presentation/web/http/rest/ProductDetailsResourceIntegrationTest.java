@@ -61,10 +61,8 @@ public class ProductDetailsResourceIntegrationTest {
             assertEquals(products.get(index).getId(), p.getId());
             assertEquals(products.get(index).getSku(), p.getSku());
             assertEquals(products.get(index).getDescription(), p.getDescription());
-            assertEquals(products.get(index).getCategory().getId(),
-                    p.getCategory().getId());
-            assertEquals(products.get(index).getCategory().getName(),
-                    p.getCategory().getName());
+            assertEquals(products.get(index).getCategory().getId(), p.getCategory().getId());
+            assertEquals(products.get(index).getCategory().getName(), p.getCategory().getName());
         });
 
         verify(productRepository, times(1)).findAllProducts();
@@ -73,6 +71,7 @@ public class ProductDetailsResourceIntegrationTest {
     @Test
     void testGetProductById() {
         String responseBody = given().when().get("/351").then().statusCode(200).body("id", is(351))
+                .body("sku", is("00000008"))
                 .body("name", is("Keurig K-Classic Coffee Maker"))
                 .body("description", is("Brews multiple K-Cup Pod sizes"))
                 .body("category.id", is(151)).body("category.name", is("Home & Kitchen")).extract()
@@ -87,7 +86,8 @@ public class ProductDetailsResourceIntegrationTest {
 
     @Test
     void testGetProductByIdShouldReturnNotFound() {
-        given().when().get("/453453").then().statusCode(404).body(is(""));
+        given().when().get("/453453").then().statusCode(404).body("message",
+                is("Product details not found"));
 
         verify(productRepository, times(1)).findProductById(453453l);
     }
@@ -104,17 +104,17 @@ public class ProductDetailsResourceIntegrationTest {
     void testCreateProduct() {
         ProductCategory category =
                 productCategoryRepository.findAllProductCategories().iterator().next();
-        CreateProductDetailsDTO createProductDTO = new CreateProductDetailsDTO("00000009",
+        CreateProductDetailsDTO createProductDTO = new CreateProductDetailsDTO("90000009",
                 "New Product", "New Description", category.id);
         ProductDetails product = given().header("Content-type", "application/json")
                 .body(createProductDTO).when().post("").then().statusCode(201)
-                .body("id", is(CoreMatchers.any(Integer.class))).body("sku", is("00000009"))
+                .body("id", is(CoreMatchers.any(Integer.class))).body("sku", is("90000009"))
                 .body("name", is("New Product")).body("description", is("New Description"))
                 .body("category.id", is(Long.valueOf(category.id).intValue()))
                 .body("category.name", is(category.getName())).extract().as(ProductDetails.class);
 
         var newProduct = productRepository.findProductById(product.id).get();
-        assertEquals("00000009", newProduct.getSku());
+        assertEquals("90000009", newProduct.getSku());
         assertEquals("New Product", newProduct.getName());
         assertEquals("New Description", newProduct.getDescription());
         assertEquals(category.id, newProduct.getCategory().getId());
@@ -132,5 +132,21 @@ public class ProductDetailsResourceIntegrationTest {
                 .patch("/" + productToBeUpdated.getId()).then().statusCode(202).body(is(""));
 
         verify(productRepository, times(1)).updateProduct(any(ProductDetails.class));
+    }
+
+    @Test
+    void testPostWithEmptyBody() {
+        given().header("Content-type", "application/json").body("").when().post("").then()
+                .statusCode(400).body("message", is("No product data provided"));
+
+        verify(productRepository, times(0)).saveProduct(any(ProductDetails.class));
+    }
+
+    @Test
+    void testPatchWithEmptyBody() {
+        given().header("Content-type", "application/json").body("").when().patch("/456").then()
+                .statusCode(400).body("message", is("No product data provided"));
+
+        verify(productRepository, times(0)).updateProduct(any(ProductDetails.class));
     }
 }

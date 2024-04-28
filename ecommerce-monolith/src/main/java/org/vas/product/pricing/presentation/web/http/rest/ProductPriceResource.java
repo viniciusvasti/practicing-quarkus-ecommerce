@@ -16,8 +16,10 @@ import org.vas.product.pricing.presentation.dtos.UpdateProductPriceDTO;
 import io.quarkus.cache.CacheInvalidateAll;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -48,7 +50,7 @@ public class ProductPriceResource {
             @APIResponse(responseCode = "404", description = "Product not found")})
     public RestResponse<ProductPrice> getById(@PathParam("id") String id) {
         return service.findById(Long.parseLong(id)).map(RestResponse::ok)
-                .orElse(RestResponse.notFound());
+                .orElseThrow(() -> new NotFoundException("Product price not found"));
     }
 
     @POST
@@ -57,6 +59,9 @@ public class ProductPriceResource {
     @APIResponses({@APIResponse(responseCode = "201", description = "Product created"),
             @APIResponse(responseCode = "400", description = "Invalid product")})
     public RestResponse<ProductPrice> create(CreateProductPriceDTO productDto) {
+        if (productDto == null) {
+            throw new BadRequestException("No product data provided");
+        }
         // TODO: handle invalid product exception
         var created = service.create(productDto);
         return RestResponse.status(Status.CREATED, created);
@@ -74,6 +79,9 @@ public class ProductPriceResource {
             @APIResponse(responseCode = "400", description = "Invalid product"),
             @APIResponse(responseCode = "404", description = "Product not found")})
     public void update(@PathParam("id") String id, UpdateProductPriceDTO productDto) {
+        if (productDto == null) {
+            throw new BadRequestException("No product data provided");
+        }
         // TODO: handle invalid product exception
         service.update(productDto, Long.parseLong(id));
     }

@@ -7,6 +7,7 @@
 
 - [x] Monolith
 - [x] REST API (JAX-RS)
+- [x] RESTFull API Maturity Level 3
 - [x] API Specification (OpenAPI + Swagger)
 - [x] SQL Database (Postgres)
 - [ ] NoSQL
@@ -14,10 +15,11 @@
 - [ ] GraphQL API
 - [x] Health Check (SmallRye / MicroProfile)
 - [x] Caching
+- [x] Application Event Bus
 - [ ] Distributed Logging
 - [ ] Microservices
 - [ ] API Gateway
-- [ ] Synchronous Communication
+- [x] Synchronous Communication
 - [ ] Asynchronous Communication
 - [ ] Event-Driven
 - [ ] Microservices Orchestration
@@ -26,8 +28,8 @@
 - [ ] Event Sourcing
 
 - [x] Unit Tests (JUnit)
-- [x] Integration Tests (JUnit)
-- [ ] End-to-End Tests
+- [x] Integration Tests (JUnit + Rest Assured)
+- [x] End-to-End Tests (Karate)
 - [x] Mocks (Mockito)
 - [x] Stubs (Mockito)
 - [x] Spies (Mockito)

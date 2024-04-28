@@ -144,4 +144,12 @@ public class OrderResourceIntegrationTest {
         verify(orderRepository, times(0)).saveOrder(any(Order.class));
     }
 
+    @Test
+    void testPostWithEmptyBody() {
+        given().header("Content-type", "application/json").body("").when().post("").then()
+                .statusCode(400).body("message", is("No order data provided"));
+
+        verify(orderRepository, times(0)).saveOrder(any(Order.class));
+    }
+
 }

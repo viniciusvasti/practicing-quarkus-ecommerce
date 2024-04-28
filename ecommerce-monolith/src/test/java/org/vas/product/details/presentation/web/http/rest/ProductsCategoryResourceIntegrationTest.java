@@ -58,7 +58,8 @@ public class ProductsCategoryResourceIntegrationTest {
 
     @Test
     void testGetProductCategoryByIdShouldReturnNotFound() {
-        given().when().get("/1000").then().statusCode(404).body(is(""));
+        given().when().get("/1000").then().statusCode(404).body("message",
+                is("Category not found"));
 
         verify(productCategoryRepository, times(1)).findProductCategoryById(1000l);
     }
@@ -103,5 +104,22 @@ public class ProductsCategoryResourceIntegrationTest {
         assertEquals("Updated Category", updatedProductCategory.getName());
 
         verify(productCategoryRepository, times(1)).updateProductCategory(updatedProductCategory);
+    }
+
+    @Test
+    void testPostWithEmptyBody() {
+        given().header("Content-type", "application/json").body("").when().post("").then()
+                .statusCode(400).body("message", is("No category data provided"));
+
+        verify(productCategoryRepository, times(0)).saveProductCategory(any(ProductCategory.class));
+    }
+
+    @Test
+    void testPatchWithEmptyBody() {
+        given().header("Content-type", "application/json").body("").when().patch("/456").then()
+                .statusCode(400).body("message", is("No category data provided"));
+
+        verify(productCategoryRepository, times(0))
+                .updateProductCategory(any(ProductCategory.class));
     }
 }
