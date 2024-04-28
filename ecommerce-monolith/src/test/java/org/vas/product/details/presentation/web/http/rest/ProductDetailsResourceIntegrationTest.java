@@ -71,6 +71,7 @@ public class ProductDetailsResourceIntegrationTest {
     @Test
     void testGetProductById() {
         String responseBody = given().when().get("/351").then().statusCode(200).body("id", is(351))
+                .body("sku", is("00000008"))
                 .body("name", is("Keurig K-Classic Coffee Maker"))
                 .body("description", is("Brews multiple K-Cup Pod sizes"))
                 .body("category.id", is(151)).body("category.name", is("Home & Kitchen")).extract()
@@ -103,17 +104,17 @@ public class ProductDetailsResourceIntegrationTest {
     void testCreateProduct() {
         ProductCategory category =
                 productCategoryRepository.findAllProductCategories().iterator().next();
-        CreateProductDetailsDTO createProductDTO = new CreateProductDetailsDTO("00000009",
+        CreateProductDetailsDTO createProductDTO = new CreateProductDetailsDTO("90000009",
                 "New Product", "New Description", category.id);
         ProductDetails product = given().header("Content-type", "application/json")
                 .body(createProductDTO).when().post("").then().statusCode(201)
-                .body("id", is(CoreMatchers.any(Integer.class))).body("sku", is("00000009"))
+                .body("id", is(CoreMatchers.any(Integer.class))).body("sku", is("90000009"))
                 .body("name", is("New Product")).body("description", is("New Description"))
                 .body("category.id", is(Long.valueOf(category.id).intValue()))
                 .body("category.name", is(category.getName())).extract().as(ProductDetails.class);
 
         var newProduct = productRepository.findProductById(product.id).get();
-        assertEquals("00000009", newProduct.getSku());
+        assertEquals("90000009", newProduct.getSku());
         assertEquals("New Product", newProduct.getName());
         assertEquals("New Description", newProduct.getDescription());
         assertEquals(category.id, newProduct.getCategory().getId());

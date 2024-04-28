@@ -101,14 +101,14 @@ public class ProductInventoryResourceIntegrationTest {
 
     @Test
     void testCreateProduct() {
-        CreateProductInventoryDTO createProductDTO = new CreateProductInventoryDTO("00000009", 8);
+        CreateProductInventoryDTO createProductDTO = new CreateProductInventoryDTO("90000009", 8);
         ProductInventory product = given().header("Content-type", "application/json")
                 .body(createProductDTO).when().post("").then().statusCode(201)
-                .body("id", is(CoreMatchers.any(Integer.class))).body("sku", is("00000009"))
+                .body("id", is(CoreMatchers.any(Integer.class))).body("sku", is("90000009"))
                 .body("stockUnits", is(8)).extract().as(ProductInventory.class);
 
         var newProduct = productRepository.findProductById(product.id).get();
-        assertEquals("00000009", newProduct.getSku());
+        assertEquals("90000009", newProduct.getSku());
         assertEquals(8, newProduct.getStockUnits());
 
         verify(productRepository, times(1)).saveProduct(any(ProductInventory.class));
