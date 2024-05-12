@@ -28,8 +28,12 @@ jobs:
       - name: Build with Maven
         run: ./mvnw verify
 
-      # - name: Build the Docker image
-      #   run: docker build -t viniciussantos/ecommerce-monolith:1.0.0-SNAPSHOT .
+      - if: ${{ github.ref == 'refs/heads/main' }}
+        name: Build and Publish Docker image
+        run: |
+          ./mvnw quarkus:image-build
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          ./mvnw quarkus:image-push
 
       # - name: Push the Docker image
       #   run: docker push viniciussantos/ecommerce-monolith:1.0.0-SNAPSHOT
