@@ -38,7 +38,7 @@ docker-compose -f infra/compose.dev.yaml up -d
 - [x] Database Migrations (Flyway)
 - [ ] GraphQL API
 - [x] Health Check (SmallRye / MicroProfile)
-- [x] Caching
+- [x] Caching (Redis)
 - [x] Application Event Bus
 - [ ] Distributed Logging
 - [ ] Microservices
@@ -60,7 +60,9 @@ docker-compose -f infra/compose.dev.yaml up -d
 - [x] Spies (Mockito)
 
 - [x] Docker Compose
-- [ ] CI/CD
+- [x] CI (GitHub Actions)
+- [ ] Sonar check
+- [ ] CD
 - [ ] Kubernetes
 - [x] Redis
 - [ ] Observability
