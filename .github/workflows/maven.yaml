@@ -26,7 +26,7 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: ./mvnw verify
 
       # - name: Build the Docker image
       #   run: docker build -t viniciussantos/ecommerce-monolith:1.0.0-SNAPSHOT .
