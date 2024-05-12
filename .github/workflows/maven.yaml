@@ -1,0 +1,67 @@
+name: Quarkus Ecommerce CI/CD
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-monolith:
+    name: Build Monolith
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ecommerce-monolith
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: ./mvnw verify
+
+      - if: ${{ github.ref == 'refs/heads/main' }}
+        name: Build and Publish Docker image
+        run: |
+          ./mvnw quarkus:image-build
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          ./mvnw quarkus:image-push
+
+      # - name: Push the Docker image
+      #   run: docker push viniciussantos/ecommerce-monolith:1.0.0-SNAPSHOT
+
+      # - name: Deploy to Docker Compose
+      #   run: docker-compose -f infra/compose.dev.yaml up -d
+
+      # - name: Run tests
+      #   run: mvn test
+
+      # - name: Stop Docker Compose
+      #   run: docker-compose -f infra/compose.dev.yaml down
+
+      # - name: Deploy to Kubernetes
+      #   run: kubectl apply -f infra/k8s.yaml
+
+      # - name: Run tests
+      #   run: mvn test
+
+      # - name: Stop Kubernetes
+      #   run: kubectl delete -f infra/k8s.yaml
+
+      # - name: Deploy to Heroku
+      #   run: heroku container:push web -a ecommerce-monolith
+      #   env:
+      #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      # - name: Release to Heroku
+      #   run: heroku container:release web -a ecommerce-monolith
+      #   env:
+      #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
