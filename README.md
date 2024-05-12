@@ -1,4 +1,28 @@
 # Repository to practice Java Quarkus Platform
+## Running locally
+### On Kubernetes
+1. Install Kind (https://kind.sigs.k8s.io/docs/user/quick-start/)
+2. Create a cluster running the following command from the root of the project (edit the file to remove nodes if wanted):
+```shell
+kind create cluster --config=infra/k8s/kind.yaml
+```
+3. Build the app:
+```shell
+mvn clean install
+```
+or
+```shell
+mvn build
+```
+4. Build the image
+```shell
+quarkus image build docker
+```
+5. Run the Postgres database:
+```shell
+docker-compose -f infra/compose.dev.yaml up -d
+```
+
 ## What Software Engineering Principles, Patterns, and Practices are being applied?
 - [x] SOLID
 - [x] Clean Code
@@ -26,6 +50,7 @@
 - [ ] Microservices Choreography
 - [ ] CQRS
 - [ ] Event Sourcing
+- [ ] Pagination
 
 - [x] Unit Tests (JUnit)
 - [x] Integration Tests (JUnit + Rest Assured)
@@ -34,7 +59,8 @@
 - [x] Stubs (Mockito)
 - [x] Spies (Mockito)
 
+- [x] Docker Compose
 - [ ] CI/CD
 - [ ] Kubernetes
-- [ ] Redis
+- [x] Redis
 - [ ] Observability
