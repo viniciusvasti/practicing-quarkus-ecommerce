@@ -1,4 +1,4 @@
-name: Ecommerce Monolith Quarkus CI
+name: Quarkus Ecommerce CI/CD
 
 on:
   push:
@@ -7,8 +7,12 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
+  build-monolith:
+    name: Build Monolith
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ecommerce-monolith
 
     steps:
       - name: Checkout code
@@ -22,7 +26,7 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: cd ecommerce-monolith && mvn -B package --file pom.xml
+        run: mvn -B package --file pom.xml
 
       # - name: Build the Docker image
       #   run: docker build -t viniciussantos/ecommerce-monolith:1.0.0-SNAPSHOT .
