@@ -58,6 +58,7 @@ docker-compose -f infra/compose.dev.yaml up -d
 - [x] Mocks (Mockito)
 - [x] Stubs (Mockito)
 - [x] Spies (Mockito)
+- [ ] Coverage check
 
 - [x] Docker Compose
 - [x] CI (GitHub Actions)
