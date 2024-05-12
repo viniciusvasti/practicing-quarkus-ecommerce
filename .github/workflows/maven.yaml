@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Enter monolith directory
-        uses: cd ecommerce-monolith
+        run: cd ecommerce-monolith
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
