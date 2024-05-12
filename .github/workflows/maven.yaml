@@ -12,12 +12,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Test pipeline
-        run: ls -la
+        uses: actions/checkout@v3
+
+      - name: Enter monolith directory
+        uses: cd ecommerce-monolith
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
           java-version: '17'
