@@ -12,11 +12,14 @@ services:
       DATABASE_PORT: 5432
       DATABASE_NAME: postgres
       DATABASE_URL: postgresql://em-postgres:5432/postgres
+      DATABASE_VERSION: 13.2
       REDIS_HOST: em-redis
       REDIS_PORT: 6379
     depends_on:
       - em-postgres
       - em-redis
+    networks:
+      - ecommerce-network
 
   em-postgres:
     container_name: em-postgres
@@ -28,8 +31,16 @@ services:
       PGDATA: /data/postgres
     ports:
       - 5499:5432
+    networks:
+      - ecommerce-network
 
   em-redis:
     image: redis:6.2.1
     ports:
       - 6399:6379
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge
