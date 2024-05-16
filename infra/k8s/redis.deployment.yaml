@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-monolith
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-monolith
+  template:
+    metadata:
+      labels:
+        app: redis-monolith
+    spec:
+      containers:
+      - image: redis:6.2.1
+        name: redis-monolith
+        ports:
+        - name: redis
+          containerPort: 6379
