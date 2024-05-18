@@ -1,3 +1,28 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-monolith-pv
+spec:
+  storageClassName: 'standard'
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 2Gi
+  hostPath:
+    path: /data/db
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-monolith-pvc
+spec:
+  storageClassName: 'standard'
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,3 +61,10 @@ spec:
               key: database_name
         - name: PGDATA
           value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+          - name: postgres-monolith-storage
+            mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-monolith-storage
+          persistentVolumeClaim:
+            claimName: postgres-monolith-pvc
