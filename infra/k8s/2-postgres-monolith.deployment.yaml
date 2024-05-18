@@ -23,6 +23,18 @@ spec:
     requests:
       storage: 1Gi
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-monolith
+spec:
+  selector:
+    app: postgres-monolith
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
