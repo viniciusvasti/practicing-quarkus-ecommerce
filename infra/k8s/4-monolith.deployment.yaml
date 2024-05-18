@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecommerce-monolith
+spec:
+  selector:
+    app: ecommerce-monolith
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-monolith
+  labels:
+    app: ecommerce-monolith
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ecommerce-monolith
+  template:
+    metadata:
+      labels:
+        app: ecommerce-monolith
+    spec:
+      containers:
+      - image: viniciusvas90/ecommerce-monolith:1.0.0-SNAPSHOT
+        name: ecommerce-monolith
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: monolith-secrets
+              key: database_username
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: monolith-secrets
+              key: database_password
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: monolith-config
+              key: database_host
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: monolith-config
+              key: database_port
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: monolith-config
+              key: database_name
+        - name: DATABASE_VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: monolith-config
+              key: database_version
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: monolith-config
+              key: redis_host
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: monolith-config
+              key: redis_port
