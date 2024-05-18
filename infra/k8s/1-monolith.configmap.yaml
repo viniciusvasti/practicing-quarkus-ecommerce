@@ -4,6 +4,8 @@ metadata:
   name: monolith-config
 data:
   database_name: postgres
+  redis_host: redis-monolith
+  redis_port: "6379"
 
 ---
 apiVersion: v1
