@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: monolith-config
+data:
+  database_name: postgres
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: monolith-secrets
+type: Opaque
+data:
+  database_username: cm9vdA==
+  database_password: cGFzc3dvcmQ=
