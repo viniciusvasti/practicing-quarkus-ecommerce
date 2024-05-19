@@ -31,44 +31,8 @@ spec:
         name: ecommerce-monolith
         ports:
         - containerPort: 8080
-        env:
-        - name: DATABASE_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: monolith-secrets
-              key: database_username
-        - name: DATABASE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: monolith-secrets
-              key: database_password
-        - name: DATABASE_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: monolith-config
-              key: database_host
-        - name: DATABASE_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: monolith-config
-              key: database_port
-        - name: DATABASE_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: monolith-config
-              key: database_name
-        - name: DATABASE_VERSION
-          valueFrom:
-            configMapKeyRef:
-              name: monolith-config
-              key: database_version
-        - name: REDIS_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: monolith-config
-              key: redis_host
-        - name: REDIS_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: monolith-config
-              key: redis_port
+        envFrom:
+        - configMapRef:
+            name: monolith-config
+        - secretRef:
+            name: monolith-secrets
