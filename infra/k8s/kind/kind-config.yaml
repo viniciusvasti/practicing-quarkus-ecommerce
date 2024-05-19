@@ -20,9 +20,6 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
-  - containerPort: 30001
-    hostPort: 18080
-    protocol: TCP
 # the three workers
 - role: worker
 - role: worker
