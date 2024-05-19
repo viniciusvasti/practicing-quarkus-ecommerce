@@ -50,9 +50,6 @@ elif [ "$1" == "start-infra" ]; then
     action=start_infra
 elif [ "$1" == "stop-infra" ]; then
     action=stop_infra
-else
-    echo "Invalid action. Use start, stop, restart, start-infra or stop-infra."
-    exit 1
 fi
 
 eval $action
