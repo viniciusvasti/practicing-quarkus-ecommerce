@@ -27,12 +27,32 @@ spec:
         app: ecommerce-monolith
     spec:
       containers:
-      - image: viniciusvas90/ecommerce-monolith:1.0.0-SNAPSHOT
-        name: ecommerce-monolith
-        ports:
-        - containerPort: 8080
-        envFrom:
-        - configMapRef:
-            name: monolith-config
-        - secretRef:
-            name: monolith-secrets
+        - image: viniciusvas90/ecommerce-monolith:1.0.0-SNAPSHOT
+          name: ecommerce-monolith
+          ports:
+            - containerPort: 8080
+          startupProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/started
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 4
+            periodSeconds: 1
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /q/health/live
+              port: 8080
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+            periodSeconds: 10
+          envFrom:
+            - configMapRef:
+                name: monolith-config
+            - secretRef:
+                name: monolith-secrets
