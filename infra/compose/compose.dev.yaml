@@ -1,0 +1,26 @@
+version: '3'
+name: ecommerce-monolith
+services:
+  em-postgres:
+    container_name: em-postgres
+    image: postgres:13.2
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    ports:
+      - 5499:5432
+    networks:
+      - ecommerce-network
+
+  em-redis:
+    image: redis:6.2.1
+    ports:
+      - 6399:6379
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge

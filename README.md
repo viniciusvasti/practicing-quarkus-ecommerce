@@ -1,27 +1,23 @@
 # Repository to practice Java Quarkus Platform
-## Running locally
-### On Kubernetes
-1. Install Kind (https://kind.sigs.k8s.io/docs/user/quick-start/)
-2. Create a cluster running the following command from the root of the project (edit the file to remove nodes if wanted):
-```shell
-kind create cluster --config=infra/k8s/kind.yaml
-```
-3. Build the app:
-```shell
-mvn clean install
-```
-or
-```shell
-mvn build
-```
-4. Build the image
-```shell
-quarkus image build docker
-```
-5. Run the Postgres database:
-```shell
-docker-compose -f infra/compose.dev.yaml up -d
-```
+## Running
+### On Docker (locally with Docker Compose)
+1. Make sure you have Docker and Docker Compose installed
+2. From the root folder, run `chmod +x run-local.sh`
+3. Then run `./run-local.sh`
+4. To stop the services, run `./run-local.sh stop`
+
+### On Kubernetes (locally with Kind)
+1. Make sure you have Kind installed
+2. Go to `infra/k8s/kind` folder
+3. Run `./create-cluster.sh`
+4. Move back to the `k8s` folder
+5. Run `kubectl apply -f .` to all the resources
+6. Run `./destroy-cluster.sh` to destroy the cluster
+
+Or simply go to the root folder and run `./run-local-on-kind.sh`.  
+Then `./run-local-on-kind.sh stop` to stop the services.
+
+I'm using [Lens](https://k8slens.dev) to manage my Kubernetes cluster, but it's not necessary. You can use `kubectl` to do the same.
 
 ## What Software Engineering Principles, Patterns, and Practices are being applied?
 - [x] SOLID
@@ -64,6 +60,8 @@ docker-compose -f infra/compose.dev.yaml up -d
 - [x] CI (GitHub Actions)
 - [ ] Sonar check
 - [ ] CD
-- [ ] Kubernetes
+- [ ] Kubernetes (AWS)
+- [x] Local Kubernetes ([Kind](https://kind.io))
 - [x] Redis
 - [ ] Observability
+- [ ] Monitoring (Jaeger)

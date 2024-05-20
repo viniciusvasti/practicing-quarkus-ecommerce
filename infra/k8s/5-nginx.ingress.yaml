@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ecommerce-api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /api(/|$)(.*) # This is the path that will be used to access the service
+        backend:
+          service:
+            name: ecommerce-monolith
+            port:
+              number: 8080
